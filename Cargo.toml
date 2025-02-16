@@ -1,0 +1,7 @@
+[workspace]
+members = ["cli"]
+package = { edition = "2021" }
+resolver = "2"
+
+[workspace.dependencies]
+clap = { version = "4.5.29", features = ["derive"] }
