@@ -1,6 +1,7 @@
 {
-  "version": "2.1.2",
-  "protocol": "groth16",
   "curve": "bn128",
-  "verbose": true
+  "include": ["../node_modules"],
+  "protocol": "groth16",
+  "verbose": true,
+  "version": "2.1.2"
 }

@@ -80,7 +80,7 @@ quiet = true
 alias = "tci"
 description = "Run the circuits tests"
 dir = "circuits"
-run = "bun t"
+run = "bun test"
 quiet = true
 
 [tasks."test:contracts"]
@@ -105,3 +105,4 @@ anvil = { version = "tag:stable", bin = "anvil" }
 cast = { version = "tag:stable", bin = "cast" }
 chisel = { version = "tag:stable", bin = "chisel" }
 forge = { version = "tag:stable", bin = "forge" }
+"cargo:https://github.com/iden3/circom.git" = { version = "latest" }
