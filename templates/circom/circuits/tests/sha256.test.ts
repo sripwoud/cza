@@ -1,7 +1,7 @@
 import { beforeAll, describe, it } from 'bun:test'
-import { WitnessTester } from 'circomkit'
+import type { WitnessTester } from 'circomkit'
 import { Circomkit } from 'circomkit'
-import { createHash } from 'crypto'
+import { createHash } from 'node:crypto'
 
 const circomkit = new Circomkit({ verbose: false })
 
@@ -16,7 +16,9 @@ describe('sha256', () => {
   const PREIMAGE_BYTES = PREIMAGE.toJSON().data
 
   // digest and its byte array
-  const DIGEST = createHash('sha256').update(new Uint8Array(PREIMAGE)).digest('hex')
+  const DIGEST = createHash('sha256')
+    .update(new Uint8Array(PREIMAGE))
+    .digest('hex')
   const DIGEST_BYTES = Buffer.from(DIGEST, 'hex').toJSON().data
 
   // circuit signals

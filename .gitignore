@@ -1,7 +1,5 @@
+bun.lock
 .cargo/*
-!.cargo/config.toml
 Cargo.lock
+node_modules
 target
-
-.envrc
-.tool-versions

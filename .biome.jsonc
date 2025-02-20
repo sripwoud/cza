@@ -1,0 +1,30 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.3.3/schema.json",
+  // format with dprint
+  "formatter": {
+    "enabled": false,
+  },
+  "json": {
+    "parser": {
+      "allowComments": true,
+      "allowTrailingCommas": true,
+    },
+  },
+  "linter": {
+    "enabled": true,
+    // templates have their own biome config file, and biome doesn't support nested/monorepo configs https://biomejs.dev/guides/big-projects/#monorepos
+    "ignore": ["templates"],
+    "rules": {
+      "recommended": true,
+    },
+  },
+  // organize imports with dprint
+  "organizeImports": {
+    "enabled": false,
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true,
+  },
+}

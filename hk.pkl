@@ -1,0 +1,19 @@
+// amends "https://hk.jdx.dev/v0/hk.pkl"
+amends "https://raw.githubusercontent.com/jdx/hk/51c981c9d4ce72b02f4dd5beda545136858ca9f2/pkl/hk.pkl"
+min_hk_version = "0.2.3"
+
+`pre-commit` {
+  ["format"] {
+    fix_all = "dprint fmt"
+  }
+  ["lint-sol"] {
+    check_all = "solhint --config templates/circom/contracts/.solhint.json --ignore-path templates/circom/contracts/.solhintignore templates/circom/contracts/**/*.sol"
+  }
+  // run biome in parallel in all folders where a biome config file is found
+  ["lint-ts"] {
+    check_all = "find . -type f -name '.biome.jsonc' -path './templates/*' -o -name '.biome.jsonc' -path '.' | xargs -P 0 -I {} biome check --config-path={} --no-errors-on-unmatched"
+  }
+  ["typecheck"] {
+    check_all = "tsc -p templates/circom/web/tsconfig.app.json"
+  }
+}

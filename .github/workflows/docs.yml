@@ -2,7 +2,7 @@ name: docs
 on:
   push:
     branches: [main]
-    paths: ['src/**/*.rs', 'Cargo.toml', '.github/workflows/docs.yml']
+    paths: ["src/**/*.rs", "Cargo.toml", ".github/workflows/docs.yml"]
   workflow_dispatch:
 
 permissions:
