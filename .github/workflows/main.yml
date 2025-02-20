@@ -2,26 +2,57 @@ name: main
 
 on:
   pull_request:
-    types: [opened, reopened, synchronize]
     branches: [main]
   push:
     branches: [main]
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
-  cancel-in-progress: true
-
 jobs:
-  format-lint:
+  changed-files:
+    runs-on: ubuntu-latest
+    outputs:
+      any_rs_changed: ${{ steps.filter.outputs.any_changed }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: tj-actions/changed-files@v44
+        id: changed-files
+        with:
+          files: |
+            src/**/*.rs
+            Cargo.toml
+            Cargo.lock
+
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: taiki-e/install-action@dprint
-      - run: dprint check
-      - run: cargo clippy --all-targets --all-features --workspace
+      - uses: jdx/mise-action@v2
+        with:
+          mise_toml: |
+            [tasks]
+            "check:format" = { run = "find . -type f -name '.dprint.jsonc' -path './templates/*' -o -name '.dprint.jsonc' | xargs -P 0 -I {} dprint check" }
+            "check:lint-rs" = {run = "cargo clippy --all-targets --all-features --workspace"}
+            "check:lint-ts" = { run = "find . -type f -name '.biome.jsonc' -path './templates/*' -o -name '.biome.jsonc' -path '.' | xargs -P 0 -I {} biome check --config-path={} --no-errors-on-unmatched" }
+            check = { depends = "check:*"}
+            [tools]
+            "cargo:https://github.com/foundry-rs/foundry" = { version = "tag:stable", crate = "forge" }
+            dprint = "latest"
+            rust = { version = "latest", profile = "minimal" }
+            "npm:@biomejs/biome" = "latest"
+            "npm:typescript" = "latest"
+      - name: Get toolchain version
+        id: toolchain
+        run: echo "toolchain=$(rustup show active-toolchain | awk '{print $1}')" >> $GITHUB_OUTPUT
+      - name: Install rustfmt and clippy
+        env:
+          toolchain: ${{ steps.toolchain.outputs.toolchain }}
+        run: |
+          rustup update $toolchain
+          rustup component add rustfmt clippy --toolchain $toolchain
+      - run: mise r check
 
-  test:
+  _test:
+    needs: changed-files
+    if: needs.changed-files.outputs.any_rs_changed == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -34,5 +65,14 @@ jobs:
       - name: Collect coverage data
         run: cargo llvm-cov nextest --lcov --output-path lcov.info
 
-      - name: Coveralls
-        uses: coverallsapp/github-action@v2
+      - uses: coverallsapp/github-action@v2
+
+  test:
+    needs: _test
+    # workaround for https://github.com/orgs/community/discussions/13690
+    # https://stackoverflow.com/a/77066140/9771158
+    if: ${{ !(failure() || cancelled()) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tests OK (passed or skipped)
+        run: exit 0
