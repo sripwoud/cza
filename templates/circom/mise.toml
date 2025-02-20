@@ -1,0 +1,97 @@
+[alias]
+anvil = "cargo:https://github.com/foundry-rs/foundry"
+cast = "cargo:https://github.com/foundry-rs/foundry"
+chisel = "cargo:https://github.com/foundry-rs/foundry"
+forge = "cargo:https://github.com/foundry-rs/foundry"
+
+[env]
+ANVIL_RPC_URL = "http://localhost:8545"
+ANVIL_PKEY_0 = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+MISE_CARGO_BINSTALL = true
+SEPOLIA_COUNTER_ADDRESS = "0xFd4364354145989210ee6d93a36B4eC7D8eC65EA"
+SEPOLIA_RPC_URL = "https://ethereum-sepolia-rpc.publicnode.com"
+_ = { file = ".env.yaml" }
+
+[tasks.anvil]
+alias = "a"
+description = "Start anvil local ethereum testnet node"
+# TODO: install anvil via mise tools
+run = "anvil"
+
+[tasks."build:contracts"]
+alias = "bc"
+description = "Build the contracts"
+run = "forge b"
+quiet = true
+
+[tasks."build:web"]
+alias = "bw"
+description = "Build the project"
+dir = "web"
+run = ["bun tsc -b", "bun vite build"]
+quiet = true
+
+[tasks."deploy:anvil"]
+alias = "da"
+description = "Deploy the Counter contract to the local test network"
+dir = "contracts"
+run = """
+forge script \
+  script/Counter.s.sol \
+  --broadcast \
+  --rpc-url $ANVIL_RPC_URL \
+  --private-key $ANVIL_PKEY_0
+"""
+quiet = true
+
+[tasks."deploy:sepolia"]
+alias = "ds"
+description = "Deploy the contracts to sepolia"
+run = """
+forge script \
+  CounterScript \
+  --broadcast \
+  --chain sepolia \
+  --rpc-url $SEPOLIA_RPC_URL \
+  --private-key $DEV_PKEY \
+  --verify \
+  -vvvv \
+  --interactives 1
+"""
+quiet = true
+
+[tasks.dev]
+alias = "d"
+description = "Start the dev server"
+dir = "web"
+run = "bun vite"
+quiet = true
+
+[tasks.preview]
+alias = "p"
+description = "Preview the app"
+dir = "web"
+run = "bun vite preview"
+quiet = true
+
+[tasks."test:contracts"]
+alias = "tc"
+description = "Run the contracts tests"
+run = "forge test"
+quiet = true
+
+[tools]
+bun = "latest"
+cargo-binstall = "latest"
+"cargo:convco" = "latest"
+"cargo:soldeer" = "latest"
+dprint = "latest"
+hk = "latest"
+"npm:@biomejs/biome" = "latest"
+"npm:solhint" = "latest"
+"npm:typescript" = "latest"
+pkl = "latest"
+anvil = { version = "tag:stable", bin = "anvil" }
+cast = { version = "tag:stable", bin = "cast" }
+chisel = { version = "tag:stable", bin = "chisel" }
+forge = { version = "tag:stable", bin = "forge" }

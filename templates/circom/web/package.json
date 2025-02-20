@@ -1,0 +1,39 @@
+{
+  "name": "web",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@dynamic-labs/ethereum": "^4.6.3",
+    "@dynamic-labs/sdk-react-core": "^4.6.3",
+    "@dynamic-labs/wagmi-connector": "^4.6.3",
+    "@hazae41/option": "^1.1.4",
+    "@tailwindcss/vite": "^4.0.6",
+    "@tanstack/react-form": "^0.42.0",
+    "@tanstack/react-query": "^5.66.7",
+    "@tanstack/react-router": "^1.105.0",
+    "jotai": "^2.12.1",
+    "lucide-react": "^0.475.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-spinners": "^0.15.0",
+    "tailwindcss": "^4.0.6",
+    "viem": "^2.23.3",
+    "wagmi": "^2.14.11",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@tanstack/react-query-devtools": "^5.66.3",
+    "@tanstack/router-devtools": "^1.105.0",
+    "@tanstack/router-plugin": "^1.105.0",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "@wagmi/cli": "^2.2.0",
+    "eslint": "^9.19.0",
+    "globals": "^15.14.0",
+    "typescript": "~5.7.2",
+    "vite": "^6.1.0",
+    "vite-plugin-node-polyfills": "^0.23.0",
+    "vite-tsconfig-paths": "^5.1.4"
+  }
+}

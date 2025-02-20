@@ -1,0 +1,9 @@
+broadcast
+cache
+coverage
+dist
+lcov.info
+node_modules
+out
+.env*
+.zed

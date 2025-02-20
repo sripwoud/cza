@@ -1,0 +1,18 @@
+// amends "https://hk.jdx.dev/v0/hk.pkl"
+amends "https://raw.githubusercontent.com/jdx/hk/51c981c9d4ce72b02f4dd5beda545136858ca9f2/pkl/hk.pkl"
+min_hk_version = "0.2.3"
+
+`pre-commit` {
+  ["format"] {
+    fix_all = "dprint fmt"
+  }
+  ["lint-sol"] {
+    check_all = "solhint --config contracts/.solhint.json --ignore-path contracts/.solhintignore contracts/**/*.sol"
+  }
+  ["lint-ts"] {
+    check_all = "biome lint --config-path=.biome.jsonc --no-errors-on-unmatched"
+  }
+  ["typecheck"] {
+    check_all = "tsc -p web/tsconfig.app.json"
+  }
+}

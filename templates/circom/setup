@@ -13,12 +13,14 @@ log() {
 install_mise() {
   curl https://mise.run | sh
   mise activate
-  echo "✅ Installed ${ORANGE}mise$RESET"
+  echo "✅ ${ORANGE}mise$RESET is installed"
 }
 
 maybe_install_mise() {
   if ! command -v mise >/dev/null; then
     install_mise
+  else
+    log "✅ ${ORANGE}mise$RESET is already installed"
   fi
 }
 
@@ -62,10 +64,8 @@ integrate_convco_with_git() {
     log "${RED}error: No editor found.$RESET"
     log "Please set the ${ORANGE}EDITOR$RESET environment variable to your preferred editor and run ${ORANGE}./setup$RESET again."
   fi
-}
 
-install_node_deps() {
-    find templates -mindepth 2 -maxdepth 2 -type f -name 'package.json' | xargs -P 0 -I {} bash -c 'cd $(dirname {}) && bun i'
+  log "✅ Integrated ${ORANGE}convco$RESET with git"
 }
 
 main() {
@@ -73,7 +73,7 @@ main() {
   mise install &>/dev/null && log "✅ Installed dev tools and runtimes"
   integrate_convco_with_git
   hk install >/dev/null && log "✅ Configured git hooks"
-  install_node_deps &>/dev/null && log "✅ Installed node dependencies for all templates"
+  bun install >/dev/null && log "✅ Installed node deps"
 }
 
 main
