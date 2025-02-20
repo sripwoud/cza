@@ -70,9 +70,10 @@ integrate_convco_with_git() {
 
 main() {
   maybe_install_mise
-  mise install
+  mise install &>/dev/null && log "✅ Installed dev tools and runtimes"
   integrate_convco_with_git
-  lefthook install >/dev/null && log "✅ Configured git hooks"
+  hk install >/dev/null && log "✅ Configured git hooks"
+  bun install >/dev/null && log "✅ Installed node deps"
 }
 
 main

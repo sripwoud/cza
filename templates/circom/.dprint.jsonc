@@ -1,4 +1,8 @@
 {
+  "excludes": ["contracts/lib", "web/src/routeTree.gen.ts"],
+  "exec": {
+    "commands": [{ "command": "forge fmt - --raw", "exts": ["sol"] }],
+  },
   "extends": [
     "https://raw.githubusercontent.com/sripwoud/configs/main/packages/dprint/.dprint.ts.jsonc",
   ],
@@ -8,5 +12,6 @@
     "https://plugins.dprint.dev/typescript-0.93.3.wasm",
     "https://plugins.dprint.dev/g-plane/pretty_yaml-v0.5.0.wasm",
     "https://plugins.dprint.dev/toml-0.6.4.wasm",
+    "https://plugins.dprint.dev/exec-0.5.1.json@492414e39dea4dccc07b4af796d2f4efdb89e84bae2bd4e1e924c0cc050855bf",
   ],
 }

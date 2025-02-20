@@ -1,21 +1,36 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.3.3/schema.json",
-  // organize imports with dprint
-  "organizeImports": {
-    "enabled": false,
-  },
   // format with dprint
   "formatter": {
     "enabled": false,
   },
+  "json": {
+    "parser": {
+      "allowComments": true,
+      "allowTrailingCommas": true,
+    },
+  },
   "linter": {
     "enabled": true,
-    "ignore": ["dist"],
+    "ignore": ["contracts/lib", "dist", "web/src/routeTree.gen.ts"],
     "rules": {
-      "recommended": true,
       "complexity": {
         "useLiteralKeys": "off",
       },
+      "correctness": {
+        // @tanstack/form form fields use children prop
+        "noChildrenProp": "off",
+      },
+      "recommended": true,
     },
+  },
+  // organize imports with dprint
+  "organizeImports": {
+    "enabled": false,
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true,
   },
 }

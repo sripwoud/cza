@@ -20,7 +20,18 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    "baseUrl": "src",
+    "paths": {
+      "c/*": ["components/*"],
+      "h/*": ["hooks/*"],
+      "l/*": ["lib/*"],
+      "p/*": ["providers/*"],
+      "p": ["providers"],
+      "r/*": ["routes/*"],
+      "s/*": ["state/*"]
+    }
   },
   "include": ["src"]
 }
