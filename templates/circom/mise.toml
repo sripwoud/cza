@@ -18,21 +18,21 @@ description = "Start anvil local ethereum testnet node"
 # TODO: install anvil via mise tools
 run = "anvil"
 
-[tasks."build:contracts"]
+[tasks."build.contracts"]
 alias = "bc"
 dir = "contracts"
 description = "Build the contracts"
 run = "forge b"
 quiet = true
 
-[tasks."build:web"]
+[tasks."build.web"]
 alias = "bw"
 description = "Build the project"
 dir = "web"
 run = ["bun tsc -b", "bun vite build"]
 quiet = true
 
-[tasks."deploy:anvil"]
+[tasks."deploy.anvil"]
 alias = "da"
 description = "Deploy the Counter contract to the local test network"
 dir = "contracts"
@@ -45,7 +45,7 @@ forge script \
 """
 quiet = true
 
-[tasks."deploy:sepolia"]
+[tasks."deploy.sepolia"]
 alias = "ds"
 description = "Deploy the contracts to sepolia"
 dir = "contracts"
@@ -76,14 +76,20 @@ dir = "web"
 run = "bun vite preview"
 quiet = true
 
-[tasks."test:circuits"]
+[tasks.test]
+alias = "t"
+description = "Run all tests"
+depends = "test.*"
+quiet = true
+
+[tasks."test.circuits"]
 alias = "tci"
 description = "Run the circuits tests"
 dir = "circuits"
 run = "bun test"
 quiet = true
 
-[tasks."test:contracts"]
+[tasks."test.contracts"]
 alias = "tco"
 description = "Run the contracts tests"
 dir = "contracts"
@@ -106,3 +112,4 @@ cast = { version = "tag:stable", bin = "cast" }
 chisel = { version = "tag:stable", bin = "chisel" }
 forge = { version = "tag:stable", bin = "forge" }
 "cargo:https://github.com/iden3/circom.git" = { version = "latest" }
+"npm:snarkjs" = "latest"

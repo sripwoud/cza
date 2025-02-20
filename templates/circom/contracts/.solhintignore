@@ -1,1 +1,2 @@
-lib
+dependencies
+src/Verifier*.sol

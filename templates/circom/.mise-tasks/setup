@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#MISE description="Run circuit specific setup (bn128)"
+#MISE dir="circuits"
+#MISE quiet=true
+
+circuits() {
+  dasel -f circuits.json 'keys().all()' -w -
+}
+
+main() {
+  PS3="Circuit to run the setup for: "
+  select circuit in $(circuits); do
+    bun circomkit setup $circuit
+    break
+  done
+}
+
+main

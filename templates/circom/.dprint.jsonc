@@ -1,5 +1,5 @@
 {
-  "excludes": ["contracts/lib", "web/src/routeTree.gen.ts"],
+  "excludes": ["web/src/routeTree.gen.ts"],
   "exec": {
     "commands": [{ "command": "forge fmt - --raw", "exts": ["sol"] }],
   },
