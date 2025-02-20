@@ -7,7 +7,9 @@ export function DynamicProvider({ children }: { children: ReactNode }) {
   return (
     <DynamicContextProvider
       settings={{
+        enableVisitTrackingOnConnectOnly: false,
         environmentId: config.dynamic.environmentId,
+        initialAuthenticationMode: 'connect-only',
         walletConnectors: [EthereumWalletConnectors],
       }}
     >
