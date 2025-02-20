@@ -29,10 +29,10 @@ jobs:
         with:
           mise_toml: |
             [tasks]
-            "check:format" = { run = "find . -type f -name '.dprint.jsonc' -path './templates/*' -o -name '.dprint.jsonc' | xargs -P 0 -I {} dprint check" }
-            "check:lint-rs" = {run = "cargo clippy --all-targets --all-features --workspace"}
+            "check:format" = { run = "find . -type f -name '.dprint.jsonc' -path './templates/*' -o -name '.dprint.jsonc' | xargs -P 0 -I {} dprint check --excludes mise.toml" }
+            "check:lint-rs" = { run = "cargo clippy --all-targets --all-features --workspace" }
             "check:lint-ts" = { run = "find . -type f -name '.biome.jsonc' -path './templates/*' -o -name '.biome.jsonc' -path '.' | xargs -P 0 -I {} biome check --config-path={} --no-errors-on-unmatched" }
-            check = { depends = "check:*"}
+            check = { depends = "check:*" }
             [tools]
             "cargo:https://github.com/foundry-rs/foundry" = { version = "tag:stable", crate = "forge" }
             dprint = "latest"
