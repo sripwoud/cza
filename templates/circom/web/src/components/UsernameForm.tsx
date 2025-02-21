@@ -31,13 +31,13 @@ export function UsernameForm() {
               {capitalize(field.name)}
             </label>
             <input
-              onChange={(e) => field.handleChange(e.target.value)}
+              className='mr-4'
               id={field.name}
               name={field.name}
-              type='text'
+              onChange={(e) => field.handleChange(e.target.value)}
               placeholder={field.name}
+              type='text'
               value={field.state.value}
-              style={{ marginRight: '4px' }}
             />
             <br />
             <FieldInfo field={field} />

@@ -1,0 +1,16 @@
+[profile.default]
+auto_detect_remappings = true
+libs = ["dependencies"]
+no_match_coverage = "script"
+remappings = ["forge-std/=dependencies/forge-std-1.9.6/src/"]
+solc = "0.8.28"
+
+[etherscan]
+sepolia = { key = "${ETHERSCAN_API_KEY}" }
+
+[rpc_endpoints]
+localhost = "${ANVIL_RPC_URL}"
+sepolia = "${SEPOLIA_RPC_URL}"
+
+[dependencies]
+forge-std = "1.9.6"

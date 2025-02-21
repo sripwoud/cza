@@ -53,6 +53,25 @@ export const counterConfig = {
 } as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Groth16Verifier
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const groth16VerifierAbi = [
+  {
+    type: 'function',
+    inputs: [
+      { name: '_pA', internalType: 'uint256[2]', type: 'uint256[2]' },
+      { name: '_pB', internalType: 'uint256[2][2]', type: 'uint256[2][2]' },
+      { name: '_pC', internalType: 'uint256[2]', type: 'uint256[2]' },
+      { name: '_pubSignals', internalType: 'uint256[32]', type: 'uint256[32]' },
+    ],
+    name: 'verifyProof',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // IMulticall3
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -393,6 +412,21 @@ export const simulateCounterSetNumber = /*#__PURE__*/ createSimulateContract({
 })
 
 /**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link groth16VerifierAbi}__
+ */
+export const readGroth16Verifier = /*#__PURE__*/ createReadContract({
+  abi: groth16VerifierAbi,
+})
+
+/**
+ * Wraps __{@link readContract}__ with `abi` set to __{@link groth16VerifierAbi}__ and `functionName` set to `"verifyProof"`
+ */
+export const readGroth16VerifierVerifyProof = /*#__PURE__*/ createReadContract({
+  abi: groth16VerifierAbi,
+  functionName: 'verifyProof',
+})
+
+/**
  * Wraps __{@link readContract}__ with `abi` set to __{@link iMulticall3Abi}__
  */
 export const readIMulticall3 = /*#__PURE__*/ createReadContract({
@@ -683,6 +717,21 @@ export const useSimulateCounterSetNumber = /*#__PURE__*/ createUseSimulateContra
   abi: counterAbi,
   address: counterAddress,
   functionName: 'setNumber',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link groth16VerifierAbi}__
+ */
+export const useReadGroth16Verifier = /*#__PURE__*/ createUseReadContract({
+  abi: groth16VerifierAbi,
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link groth16VerifierAbi}__ and `functionName` set to `"verifyProof"`
+ */
+export const useReadGroth16VerifierVerifyProof = /*#__PURE__*/ createUseReadContract({
+  abi: groth16VerifierAbi,
+  functionName: 'verifyProof',
 })
 
 /**

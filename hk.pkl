@@ -5,14 +5,14 @@ min_hk_version = "0.2.3"
 `pre-commit` {
   // run `dprint fmt` in parallel in all folders where a biome config file is found
   ["format"] {
-    fix_all = "find . -type f -name '.dprint.jsonc' -path './templates/*' -o -name '.dprint.jsonc' | xargs -P 0 -I {} dprint fmt"
+    fix_all = "find . -type f -name '.dprint.jsonc' -path '*/templates/*' -o -name '.dprint.jsonc' | xargs -P 0 -I {} dprint fmt"
   }
   ["lint-sol"] {
-    check_all = "solhint --config templates/circom/contracts/.solhint.json --ignore-path templates/circom/contracts/.solhintignore templates/circom/contracts/**/*.sol"
+    check_all = "find . -type f -name '.solhint.json' -path '*/templates/*' -exec sh -c 'cd \"$(dirname \"{}\")\" && solhint \"**/*.sol\"' \\;"
   }
   // run `biome check` in parallel in all folders where a biome config file is found
   ["lint-ts"] {
-    check_all = "find . -type f -name '.biome.jsonc' -path './templates/*' -o -name '.biome.jsonc' | xargs -P 0 -I {} biome check --config-path={} --no-errors-on-unmatched"
+    check_all = "find . -type f -name '.biome.jsonc' -path '*/templates/*' -o -name '.biome.jsonc' | xargs -P 0 -I {} biome check --config-path={} --no-errors-on-unmatched --vcs-root=$(pwd)"
   }
   ["typecheck"] {
     check_all = "tsc -p templates/circom/web/tsconfig.app.json"

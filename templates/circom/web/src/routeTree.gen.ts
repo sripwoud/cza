@@ -13,13 +13,14 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as Web3Import } from './routes/web3'
 import { Route as QueryImport } from './routes/query'
+import { Route as ProofImport } from './routes/proof'
 
 // Create Virtual Routes
 
 const StateLazyImport = createFileRoute('/state')()
 const FormLazyImport = createFileRoute('/form')()
+const CounterLazyImport = createFileRoute('/counter')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
@@ -36,15 +37,21 @@ const FormLazyRoute = FormLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/form.lazy').then((d) => d.Route))
 
-const Web3Route = Web3Import.update({
-  id: '/web3',
-  path: '/web3',
+const CounterLazyRoute = CounterLazyImport.update({
+  id: '/counter',
+  path: '/counter',
   getParentRoute: () => rootRoute,
-} as any)
+} as any).lazy(() => import('./routes/counter.lazy').then((d) => d.Route))
 
 const QueryRoute = QueryImport.update({
   id: '/query',
   path: '/query',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ProofRoute = ProofImport.update({
+  id: '/proof',
+  path: '/proof',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -65,6 +72,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/proof': {
+      id: '/proof'
+      path: '/proof'
+      fullPath: '/proof'
+      preLoaderRoute: typeof ProofImport
+      parentRoute: typeof rootRoute
+    }
     '/query': {
       id: '/query'
       path: '/query'
@@ -72,11 +86,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QueryImport
       parentRoute: typeof rootRoute
     }
-    '/web3': {
-      id: '/web3'
-      path: '/web3'
-      fullPath: '/web3'
-      preLoaderRoute: typeof Web3Import
+    '/counter': {
+      id: '/counter'
+      path: '/counter'
+      fullPath: '/counter'
+      preLoaderRoute: typeof CounterLazyImport
       parentRoute: typeof rootRoute
     }
     '/form': {
@@ -100,16 +114,18 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
+  '/proof': typeof ProofRoute
   '/query': typeof QueryRoute
-  '/web3': typeof Web3Route
+  '/counter': typeof CounterLazyRoute
   '/form': typeof FormLazyRoute
   '/state': typeof StateLazyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
+  '/proof': typeof ProofRoute
   '/query': typeof QueryRoute
-  '/web3': typeof Web3Route
+  '/counter': typeof CounterLazyRoute
   '/form': typeof FormLazyRoute
   '/state': typeof StateLazyRoute
 }
@@ -117,33 +133,36 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
+  '/proof': typeof ProofRoute
   '/query': typeof QueryRoute
-  '/web3': typeof Web3Route
+  '/counter': typeof CounterLazyRoute
   '/form': typeof FormLazyRoute
   '/state': typeof StateLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/query' | '/web3' | '/form' | '/state'
+  fullPaths: '/' | '/proof' | '/query' | '/counter' | '/form' | '/state'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/query' | '/web3' | '/form' | '/state'
-  id: '__root__' | '/' | '/query' | '/web3' | '/form' | '/state'
+  to: '/' | '/proof' | '/query' | '/counter' | '/form' | '/state'
+  id: '__root__' | '/' | '/proof' | '/query' | '/counter' | '/form' | '/state'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
+  ProofRoute: typeof ProofRoute
   QueryRoute: typeof QueryRoute
-  Web3Route: typeof Web3Route
+  CounterLazyRoute: typeof CounterLazyRoute
   FormLazyRoute: typeof FormLazyRoute
   StateLazyRoute: typeof StateLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
+  ProofRoute: ProofRoute,
   QueryRoute: QueryRoute,
-  Web3Route: Web3Route,
+  CounterLazyRoute: CounterLazyRoute,
   FormLazyRoute: FormLazyRoute,
   StateLazyRoute: StateLazyRoute,
 }
@@ -159,8 +178,9 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/proof",
         "/query",
-        "/web3",
+        "/counter",
         "/form",
         "/state"
       ]
@@ -168,11 +188,14 @@ export const routeTree = rootRoute
     "/": {
       "filePath": "index.lazy.tsx"
     },
+    "/proof": {
+      "filePath": "proof.tsx"
+    },
     "/query": {
       "filePath": "query.tsx"
     },
-    "/web3": {
-      "filePath": "web3.tsx"
+    "/counter": {
+      "filePath": "counter.lazy.tsx"
     },
     "/form": {
       "filePath": "form.lazy.tsx"

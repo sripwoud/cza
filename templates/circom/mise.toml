@@ -10,61 +10,61 @@ ANVIL_PKEY_0 = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff
 MISE_CARGO_BINSTALL = true
 SEPOLIA_COUNTER_ADDRESS = "0xFd4364354145989210ee6d93a36B4eC7D8eC65EA"
 SEPOLIA_RPC_URL = "https://ethereum-sepolia-rpc.publicnode.com"
+VITE_DYNAMIC_ENVIRONMENT_ID = "{{get_env(name='VITE_DYNAMIC_ENVIRONMENT_ID', default='f10c2bb2-9ef9-4629-8819-cb11122cc900')}}"
 _ = { file = ".env.yaml" }
 
-[tasks.anvil]
-alias = "a"
-description = "Start anvil local ethereum testnet node"
-# TODO: install anvil via mise tools
-run = "anvil"
-
-[tasks."build:contracts"]
+[tasks."build.contracts"]
 alias = "bc"
+dir = "contracts"
 description = "Build the contracts"
 run = "forge b"
 quiet = true
 
-[tasks."build:web"]
+[tasks."build.wagmi"]
+alias = "bw"
+description = "Build type safe wagmi hooks and functions"
+dir = "web"
+run = "bun wagmi generate"
+quiet = true
+
+[tasks."build.web"]
 alias = "bw"
 description = "Build the project"
 dir = "web"
 run = ["bun tsc -b", "bun vite build"]
 quiet = true
 
-[tasks."deploy:anvil"]
-alias = "da"
-description = "Deploy the Counter contract to the local test network"
+[tasks."dev.deploy.sha256.anvil"]
 dir = "contracts"
+hide = true
 run = """
+# wait for anvil to start
+sleep 2
 forge script \
-  script/Counter.s.sol \
-  --broadcast \
-  --rpc-url $ANVIL_RPC_URL \
-  --private-key $ANVIL_PKEY_0
+      "Verifier_sha256_32Script" \
+      --broadcast \
+      --rpc-url $ANVIL_RPC_URL \
+      --private-key $ANVIL_PKEY_0
 """
 quiet = true
 
-[tasks."deploy:sepolia"]
-alias = "ds"
-description = "Deploy the contracts to sepolia"
-run = """
-forge script \
-  CounterScript \
-  --broadcast \
-  --chain sepolia \
-  --rpc-url $SEPOLIA_RPC_URL \
-  --private-key $DEV_PKEY \
-  --verify \
-  -vvvv \
-  --interactives 1
-"""
+[tasks."dev.anvil"]
+alias = "a"
+description = "Start anvil local ethereum testnet node"
+run = "anvil"
+
+[tasks."dev.web"]
+alias = "dw"
+dir = "web"
+description = "Start the dev web client"
+run = "bun vite"
 quiet = true
 
 [tasks.dev]
 alias = "d"
-description = "Start the dev server"
+depends = "dev.*"
+description = "Start dev network and web client"
 dir = "web"
-run = "bun vite"
 quiet = true
 
 [tasks.preview]
@@ -74,9 +74,23 @@ dir = "web"
 run = "bun vite preview"
 quiet = true
 
-[tasks."test:contracts"]
-alias = "tc"
+[tasks.test]
+alias = "t"
+description = "Run all tests"
+depends = "test.*"
+quiet = true
+
+[tasks."test.circuits"]
+alias = "tci"
+description = "Run the circuits tests"
+dir = "circuits"
+run = "bun test"
+quiet = true
+
+[tasks."test.contracts"]
+alias = "tco"
 description = "Run the contracts tests"
+dir = "contracts"
 run = "forge test"
 quiet = true
 
@@ -95,3 +109,4 @@ anvil = { version = "tag:stable", bin = "anvil" }
 cast = { version = "tag:stable", bin = "cast" }
 chisel = { version = "tag:stable", bin = "chisel" }
 forge = { version = "tag:stable", bin = "forge" }
+"cargo:https://github.com/iden3/circom.git" = { version = "latest" }

@@ -12,7 +12,7 @@
   },
   "linter": {
     "enabled": true,
-    "ignore": ["contracts/lib", "dist", "web/src/routeTree.gen.ts"],
+    "ignore": ["web/src/routeTree.gen.ts"],
     "rules": {
       "complexity": {
         "useLiteralKeys": "off",

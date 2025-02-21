@@ -3,7 +3,10 @@ import type { WitnessTester } from 'circomkit'
 import { Circomkit } from 'circomkit'
 import { createHash } from 'node:crypto'
 
-const circomkit = new Circomkit({ verbose: false })
+const circomkit = new Circomkit({
+  include: ['../node_modules'],
+  verbose: false,
+})
 
 describe('sha256', () => {
   let circuit: WitnessTester<['in'], ['out']>
