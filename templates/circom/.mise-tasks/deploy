@@ -25,11 +25,8 @@ main() {
   echo "Deploying $contract to $network"
   case $network in
   anvil)
-    forge script \
-      "$script" \
-      --broadcast \
-      --rpc-url $ANVIL_RPC_URL \
-      --private-key $ANVIL_PKEY_0
+    mise r deploy.sha256.anvil
+    break
     ;;
   sepolia)
     forge script \

@@ -12,11 +12,6 @@ SEPOLIA_COUNTER_ADDRESS = "0xFd4364354145989210ee6d93a36B4eC7D8eC65EA"
 SEPOLIA_RPC_URL = "https://ethereum-sepolia-rpc.publicnode.com"
 _ = { file = ".env.yaml" }
 
-[tasks.anvil]
-alias = "a"
-description = "Start anvil local ethereum testnet node"
-# TODO: install anvil via mise tools
-run = "anvil"
 
 [tasks."build.contracts"]
 alias = "bc"
@@ -39,11 +34,35 @@ dir = "web"
 run = ["bun tsc -b", "bun vite build"]
 quiet = true
 
+[tasks."dev.deploy.sha256.anvil"]
+dir = "contracts"
+hide = true
+run = """
+# wait for anvil to start
+sleep 2
+forge script \
+      "Verifier_sha256_32Script" \
+      --broadcast \
+      --rpc-url $ANVIL_RPC_URL \
+      --private-key $ANVIL_PKEY_0
+"""
+quiet = true
+
+[tasks."dev.anvil"]
+alias = "a"
+description = "Start anvil local ethereum testnet node"
+run = "anvil"
+
+[tasks."dev.web"]
+description = "Start the dev web client"
+run = "bun vite"
+quiet = true
+
 [tasks.dev]
 alias = "d"
-description = "Start the dev server"
+depends = "dev.*"
+description = "Start dev network and web client"
 dir = "web"
-run = "bun vite"
 quiet = true
 
 [tasks.preview]
