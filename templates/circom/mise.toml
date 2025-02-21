@@ -54,6 +54,8 @@ description = "Start anvil local ethereum testnet node"
 run = "anvil"
 
 [tasks."dev.web"]
+alias = "dw"
+dir = "web"
 description = "Start the dev web client"
 run = "bun vite"
 quiet = true

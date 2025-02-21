@@ -14,6 +14,6 @@ interface Config {
 }
 
 export const config: Config = {
-  appName: 'web-app-template',
+  appName: 'circom-app-template',
   dynamic: { environmentId: getEnvVar('VITE_DYNAMIC_ENVIRONMENT_ID') },
 }

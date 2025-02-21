@@ -32,7 +32,10 @@ export function Prove() {
   }
 
   return proof.mapOrSync(
-    <form className='flex flex-col gap-4' onSubmit={(e) => handleSubmit(e)}>
+    <form
+      className='flex flex-col gap-4 w-full'
+      onSubmit={(e) => handleSubmit(e)}
+    >
       <form.Field
         name='preimage'
         children={(field) => (
