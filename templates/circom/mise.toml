@@ -12,7 +12,6 @@ SEPOLIA_COUNTER_ADDRESS = "0xFd4364354145989210ee6d93a36B4eC7D8eC65EA"
 SEPOLIA_RPC_URL = "https://ethereum-sepolia-rpc.publicnode.com"
 _ = { file = ".env.yaml" }
 
-
 [tasks."build.contracts"]
 alias = "bc"
 dir = "contracts"
