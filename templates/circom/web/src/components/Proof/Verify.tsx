@@ -1,34 +1,30 @@
 import { useAtomValue } from 'jotai'
-import { sha256ProofVerifyCalldata } from 'l/circuits/sha256'
 import { useReadGroth16VerifierVerifyProof } from 'l/wagmi'
 import { BarLoader } from 'react-spinners'
-import { proofAtom } from 's/atoms'
+import { verifyArgsAtom } from 's/atoms'
 
 export function Verify() {
-  const proof = useAtomValue(proofAtom)
+  const args = useAtomValue(verifyArgsAtom)
+  const {
+    data: result,
+    error,
+    isLoading,
+    refetch: verify,
+  } = useReadGroth16VerifierVerifyProof({
+    args: args.inner,
+    address: '0xb70ff8c130330dd79ce0b525570764680c0e07dc',
+    query: { enabled: false },
+  })
+  console.log({ args })
 
-  return proof.mapOrSync(
-    <div>Proof not available, submit one ☝️</div>,
-    (proof) => {
-      const {
-        data,
-        isError,
-        isLoading,
-        refetch: _verify,
-      } = useReadGroth16VerifierVerifyProof({
-        args: sha256ProofVerifyCalldata(proof),
-        query: { enabled: false },
-      })
-
-      if (isError) return <div>Error</div>
-      if (isLoading) return <BarLoader />
-      if (data !== undefined)
-        return <div>Verification result: {data.toString()}</div>
-      return (
-        <button onClick={() => console.log('verify')} type='button'>
-          Verify
-        </button>
-      )
-    },
+  if (args.isNone()) return <div>Proof not available, submit one ☝️</div>
+  if (error !== null) return <div>Error: {error.message}</div>
+  if (isLoading) return <BarLoader />
+  if (result !== undefined)
+    return <div>Verification result: {result.toString()}</div>
+  return (
+    <button onClick={() => verify()} type='button'>
+      Verify
+    </button>
   )
 }

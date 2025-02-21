@@ -1,16 +1,16 @@
-// import { Option } from '@hazae41/option'
+import { Option } from '@hazae41/option'
 import { useForm } from '@tanstack/react-form'
 import { FieldInfo } from 'c/FieldInfo'
-// import { useSetAtom } from 'jotai'
+import { useAtom } from 'jotai'
 import { sha256ProofSignals } from 'l/circuits/sha256'
 import { capitalize } from 'l/format'
 import { type PreimageSchema, preimageSchema } from 'l/schemas'
 import type { FormEvent } from 'react'
-// import { proofAtom } from 's/atoms'
+import { proofAtom } from 's/atoms'
 import { groth16 } from 'snarkjs'
 
 export function Prove() {
-  // const setProof = useSetAtom(proofAtom)
+  const [proof, setProof] = useAtom(proofAtom)
   const form = useForm<PreimageSchema>({
     defaultValues: { preimage: '' },
     onSubmit: async ({ value: { preimage } }) => {
@@ -20,7 +20,7 @@ export function Prove() {
         '/sha256_32.zkey',
       )
       console.log(proof)
-      // setProof(Option.wrap(proof));
+      setProof(Option.wrap(proof))
     },
     validators: { onChange: preimageSchema },
   })
@@ -31,7 +31,7 @@ export function Prove() {
     form.handleSubmit()
   }
 
-  return (
+  return proof.mapOrSync(
     <form className='flex flex-col gap-4' onSubmit={(e) => handleSubmit(e)}>
       <form.Field
         name='preimage'
@@ -58,6 +58,7 @@ export function Prove() {
           </button>
         )}
       />
-    </form>
+    </form>,
+    () => null,
   )
 }
