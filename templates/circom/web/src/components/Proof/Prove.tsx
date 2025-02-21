@@ -1,18 +1,28 @@
+// import { Option } from '@hazae41/option'
 import { useForm } from '@tanstack/react-form'
 import { FieldInfo } from 'c/FieldInfo'
+// import { useSetAtom } from 'jotai'
+import { sha256ProofSignals } from 'l/circuits/sha256'
 import { capitalize } from 'l/format'
-import { type UsernameSchema, usernameSchema } from 'l/schemas'
+import { type PreimageSchema, preimageSchema } from 'l/schemas'
 import type { FormEvent } from 'react'
+// import { proofAtom } from 's/atoms'
+import { groth16 } from 'snarkjs'
 
-export function UsernameForm() {
-  const form = useForm<UsernameSchema>({
-    defaultValues: {
-      username: '',
-    } as UsernameSchema,
-    onSubmit: async ({ value: { username } }) => {
-      alert(`Submitted - Username: ${username}`)
+export function Prove() {
+  // const setProof = useSetAtom(proofAtom)
+  const form = useForm<PreimageSchema>({
+    defaultValues: { preimage: '' },
+    onSubmit: async ({ value: { preimage } }) => {
+      const proof = await groth16.fullProve(
+        sha256ProofSignals(preimage),
+        '/sha256_32.wasm',
+        '/sha256_32.zkey',
+      )
+      console.log(proof)
+      // setProof(Option.wrap(proof));
     },
-    validators: { onChange: usernameSchema },
+    validators: { onChange: preimageSchema },
   })
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -22,26 +32,21 @@ export function UsernameForm() {
   }
 
   return (
-    <form onSubmit={(e) => handleSubmit(e)}>
+    <form className='flex flex-col gap-4' onSubmit={(e) => handleSubmit(e)}>
       <form.Field
-        name='username'
+        name='preimage'
         children={(field) => (
           <>
-            <label htmlFor={field.name} style={{ marginRight: '4px' }}>
-              {capitalize(field.name)}
-            </label>
+            <label htmlFor={field.name}>{capitalize(field.name)}</label>
             <input
-              className='mr-4'
               id={field.name}
               name={field.name}
               onChange={(e) => field.handleChange(e.target.value)}
-              placeholder={field.name}
+              placeholder='hello zk circom app template'
               type='text'
               value={field.state.value}
             />
-            <br />
             <FieldInfo field={field} />
-            <br />
           </>
         )}
       />

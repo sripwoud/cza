@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+#MISE description="Deploy contract"
+#MISE dir="contracts"
+#MISE quiet=true
+
+contract() {
+  PS3="Deploy: "
+  select circuit in $(ls -1 "$MISE_CONFIG_ROOT/contracts/src/" | sed 's/\..*$//'); do
+    echo "$circuit"
+    break
+  done
+}
+
+network() {
+  PS3="On: "
+  select network in anvil sepolia; do
+    echo $network
+    break
+  done
+}
+
+main() {
+  script="$(contract)Script"
+  network=$(network)
+  echo "Deploying $contract to $network"
+  case $network in
+  anvil)
+    forge script \
+      "$script" \
+      --broadcast \
+      --rpc-url $ANVIL_RPC_URL \
+      --private-key $ANVIL_PKEY_0
+    ;;
+  sepolia)
+    forge script \
+      "$script" \
+      --broadcast \
+      --chain sepolia \
+      --rpc-url $SEPOLIA_RPC_URL \
+      --private-key $DEV_PKEY \
+      --verify \
+      -vvvv \
+      --interactives 1
+    ;;
+  esac
+}
+
+main

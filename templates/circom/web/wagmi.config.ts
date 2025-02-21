@@ -12,6 +12,10 @@ export default defineConfig({
           [chains.foundry.id]: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
           [chains.sepolia.id]: '0xFd4364354145989210ee6d93a36B4eC7D8eC65EA',
         },
+        Verifier_sha256_32: {
+          [chains.foundry.id]: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
+          [chains.sepolia.id]: '0xb70ff8c130330dd79ce0b525570764680c0e07dc',
+        },
       },
       project: '../contracts',
     }),

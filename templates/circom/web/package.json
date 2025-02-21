@@ -16,6 +16,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-spinners": "^0.15.0",
+    "snarkjs": "^0.7.5",
     "tailwindcss": "^4.0.6",
     "viem": "^2.23.3",
     "wagmi": "^2.14.11",

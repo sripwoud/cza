@@ -3,7 +3,7 @@ import { Link } from '@tanstack/react-router'
 import { config } from 'l/config'
 import { capitalize } from 'l/format'
 
-const links = ['form', 'query', 'state', 'web3'] as const
+const links = ['counter', 'form', 'proof', 'query', 'state'] as const
 
 export function Header() {
   return (

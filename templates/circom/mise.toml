@@ -25,41 +25,18 @@ description = "Build the contracts"
 run = "forge b"
 quiet = true
 
+[tasks."build.wagmi"]
+alias = "bw"
+description = "Build type safe wagmi hooks and functions"
+dir = "web"
+run = "bun wagmi generate"
+quiet = true
+
 [tasks."build.web"]
 alias = "bw"
 description = "Build the project"
 dir = "web"
 run = ["bun tsc -b", "bun vite build"]
-quiet = true
-
-[tasks."deploy.anvil"]
-alias = "da"
-description = "Deploy the Counter contract to the local test network"
-dir = "contracts"
-run = """
-forge script \
-  script/Counter.s.sol \
-  --broadcast \
-  --rpc-url $ANVIL_RPC_URL \
-  --private-key $ANVIL_PKEY_0
-"""
-quiet = true
-
-[tasks."deploy.sepolia"]
-alias = "ds"
-description = "Deploy the contracts to sepolia"
-dir = "contracts"
-run = """
-forge script \
-  CounterScript \
-  --broadcast \
-  --chain sepolia \
-  --rpc-url $SEPOLIA_RPC_URL \
-  --private-key $DEV_PKEY \
-  --verify \
-  -vvvv \
-  --interactives 1
-"""
 quiet = true
 
 [tasks.dev]
@@ -112,4 +89,3 @@ cast = { version = "tag:stable", bin = "cast" }
 chisel = { version = "tag:stable", bin = "chisel" }
 forge = { version = "tag:stable", bin = "forge" }
 "cargo:https://github.com/iden3/circom.git" = { version = "latest" }
-"npm:snarkjs" = "latest"

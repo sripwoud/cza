@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+#MISE alias="cs"
+#MISE description="Run circuit specific setup (bn128), generate verifier contract and update typescript wagmi hooks/functions"
+#MISE dir="circuits"
+#MISE quiet=true
+
+set -euo pipefail
+
+circuit() {
+  PS3="Circuit to run the setup for: "
+  select circuit in $(dasel -f circuits.json 'keys().all()' -w -); do
+    echo "$circuit"
+    break
+  done
+}
+
+build_verifier() {
+    circuit="$1"
+    bun snarkjs zkesv "$MISE_CONFIG_ROOT/circuits/build/$circuit/groth16_pkey.zkey" "$MISE_CONFIG_ROOT/contracts/src/Verifier_$circuit.sol"
+}
+
+setup() {
+  circuit="$1"
+  bun circomkit setup "$circuit"
+  echo $MISE_CONFIG_ROOT
+  ln -sf "$MISE_CONFIG_ROOT/circuits/build/$circuit/${circuit}_js/${circuit}.wasm" "$MISE_CONFIG_ROOT/web/public/${circuit}.wasm"
+  ln -sf "$MISE_CONFIG_ROOT/circuits/build/$circuit/groth16_pkey.zkey" "$MISE_CONFIG_ROOT/web/public/${circuit}.zkey"
+}
+
+main() {
+  local circuit="$(circuit)"
+  setup "$circuit"
+  build_verifier "$circuit"
+  mise r build.contracts
+  mise r build.wagmi
+}
+
+main

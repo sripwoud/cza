@@ -1,7 +1,8 @@
 {
   "name": "@create-zk-app/circom",
   "devDependencies": {
-    "bun-types": "^1.2.2"
+    "bun-types": "^1.2.2",
+    "snarkjs": "^0.7.5"
   },
   "workspaces": [
     "circuits",
