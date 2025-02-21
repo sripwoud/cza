@@ -4,6 +4,7 @@
 > Bootstraped from [sripwoud/dapp-template](https://github.com/sripwoud/dapp-template)
 
 This template includes:
+
 - a sha256 circom circuit (from [erhant/circomkit](https://github.com/erhant/circomkit/tree/main/examples/bun-sha256))
 - scripts to:
   - perform a dummy setup for this circuit and build the corresponding solidity verifier contract
@@ -12,6 +13,7 @@ This template includes:
 ## Develop
 
 To start setup and start everything:
+
 ```commandline
 ./setup
 mise r d
