@@ -1,7 +1,3 @@
-build
-bun.lock
-.cargo/*
+.cargo
 Cargo.lock
-node_modules
-ptau
 target
