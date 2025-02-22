@@ -73,7 +73,6 @@ main() {
   mise install &>/dev/null && log "✅ Installed dev tools and runtimes"
   integrate_convco_with_git
   hk install >/dev/null && log "✅ Configured git hooks"
-  install_node_deps &>/dev/null && log "✅ Installed node dependencies for all templates"
 }
 
 main

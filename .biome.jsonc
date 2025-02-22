@@ -12,8 +12,6 @@
   },
   "linter": {
     "enabled": true,
-    // templates have their own biome config file, and biome doesn't support nested/monorepo configs https://biomejs.dev/guides/big-projects/#monorepos
-    "ignore": ["templates"],
     "rules": {
       "recommended": true,
     },

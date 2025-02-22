@@ -10,7 +10,7 @@ jobs:
   changed-files:
     runs-on: ubuntu-latest
     outputs:
-      any_rs_changed: ${{ steps.changed.outputs.any_changed }}
+      any_rs_changed: ${{ steps.filter.outputs.any_changed }}
     steps:
       - uses: actions/checkout@v4
       - uses: tj-actions/changed-files@v44
@@ -29,16 +29,12 @@ jobs:
         with:
           mise_toml: |
             [tasks]
-            "check:format" = { run = "find . -type f -name '.dprint.jsonc' -path './templates/*' -o -name '.dprint.jsonc' | xargs -P 0 -I {} dprint check --excludes mise.toml" }
-            "check:lint-rs" = { run = "cargo clippy --all-targets --all-features --workspace" }
-            "check:lint-ts" = { run = "find . -type f -name '.biome.jsonc' -path './templates/*' -o -name '.biome.jsonc' -path '.' | xargs -P 0 -I {} biome check --config-path={} --no-errors-on-unmatched" }
-            check = { depends = "check:*" }
+            "check:format" = { run = "dprint fmt" }
+            "check:lint" = {run = "cargo clippy --all-targets --all-features --workspace"}
+            check = { depends = "check:*"}
             [tools]
-            "cargo:https://github.com/foundry-rs/foundry" = { version = "tag:stable", crate = "forge" }
             dprint = "latest"
             rust = { version = "latest", profile = "minimal" }
-            "npm:@biomejs/biome" = "latest"
-            "npm:typescript" = "latest"
       - name: Get toolchain version
         id: toolchain
         run: echo "toolchain=$(rustup show active-toolchain | awk '{print $1}')" >> $GITHUB_OUTPUT
