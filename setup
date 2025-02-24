@@ -58,6 +58,7 @@ EOF
 
 main() {
   maybe_install_mise
+  mise trust
   mise install >/dev/null 2>&1 && log "✅ Installed dev tools and runtimes"
   use_convco_as_git_editor_only_on_main
   hk install >/dev/null && log "✅ Configured git hooks"
