@@ -5,3 +5,8 @@ resolver = "2"
 
 [workspace.dependencies]
 clap = { version = "4.5.29", features = ["derive"] }
+flate2 = "1.1.0"
+git2 = "0.20.0"
+reqwest = { version = "0.12.12", features = ["blocking", "json"] }
+serde = { version = "1.0.218", features = ["derive"] }
+tar = "0.4.44"

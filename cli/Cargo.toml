@@ -3,5 +3,14 @@ name = "cza"
 version = "0.1.0"
 edition.workspace = true
 
+[[bin]]
+name = "cza"
+path = "src/main.rs"
+
 [dependencies]
 clap.workspace = true
+flate2.workspace = true
+git2.workspace = true
+reqwest.workspace = true
+serde.workspace = true
+tar.workspace = true
