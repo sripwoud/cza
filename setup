@@ -3,7 +3,6 @@
 set -eu
 
 ORANGE="\033[33m"
-RED="\033[31m"
 RESET="\033[0m"
 
 log() {
@@ -12,7 +11,6 @@ log() {
 
 install_mise() {
   curl https://mise.run | sh
-  mise activate
   echo "✅ Installed ${ORANGE}mise$RESET"
 }
 
@@ -25,7 +23,7 @@ maybe_install_mise() {
 # i don't care that much if intermediate dev branches commits aren't always conventional
 # but i do care about convenional commits on main because there are used for semantic versioning/releasing
 use_convco_as_git_editor_only_on_main() {
-  cat >.git/hooks/prepare-commit-msg <<'EOF'
+  cat >.git/hooks/commit-msg <<'EOF'
   #!/bin/sh
 
   if [ "$(git rev-parse --abbrev-ref HEAD)" = "main" ]; then
@@ -53,14 +51,14 @@ use_convco_as_git_editor_only_on_main() {
   fi
 EOF
 
-  chmod +x .git/hooks/prepare-commit-msg
+  chmod +x .git/hooks/commit-msg
 }
 
 main() {
   maybe_install_mise
-  mise install >/dev/null 2>&1 && log "✅ Installed dev tools and runtimes"
+  mise install && log "✅ Installed dev tools and runtimes"
   use_convco_as_git_editor_only_on_main
-  hk install >/dev/null && log "✅ Configured git hooks"
+  hk install && log "✅ Configured git hooks"
 }
 
 main
