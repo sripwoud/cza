@@ -29,16 +29,7 @@ pub struct ListCommand;
 impl Execute for ListCommand {
     type Args = ListArgs;
 
-    fn execute(&self, args: &Self::Args) {
-        if let Err(e) = self.list_templates(args) {
-            eprintln!("Error listing templates: {}", e);
-            std::process::exit(1);
-        }
-    }
-}
-
-impl ListCommand {
-    fn list_templates(&self, args: &ListArgs) -> Result<()> {
+    fn run(&self, args: &Self::Args) -> Result<()> {
         // Load embedded template registry
         let registry = self.load_template_registry()?;
 
@@ -71,7 +62,9 @@ impl ListCommand {
 
         Ok(())
     }
+}
 
+impl ListCommand {
     fn print_simple_template(&self, key: &str, info: &TemplateInfo) {
         println!("  {} - {}", key, info.name);
     }

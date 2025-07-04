@@ -36,16 +36,7 @@ pub struct NewCommand;
 impl Execute for NewCommand {
     type Args = NewArgs;
 
-    fn execute(&self, args: &Self::Args) {
-        if let Err(e) = self.create_project(args) {
-            eprintln!("Error creating project: {}", e);
-            std::process::exit(1);
-        }
-    }
-}
-
-impl NewCommand {
-    fn create_project(&self, args: &NewArgs) -> Result<()> {
+    fn run(&self, args: &Self::Args) -> Result<()> {
         println!(
             "Creating new {} project: {}",
             args.template, args.project_name
@@ -113,7 +104,9 @@ impl NewCommand {
 
         Ok(())
     }
+}
 
+impl NewCommand {
     fn load_template_registry(&self) -> Result<TemplateRegistry> {
         // Load embedded templates.toml
         let templates_toml = include_str!("../../templates.toml");

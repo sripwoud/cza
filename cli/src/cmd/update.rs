@@ -1,4 +1,5 @@
 use super::Execute;
+use anyhow::Result;
 use clap::Args;
 
 #[derive(Args)]
@@ -9,8 +10,9 @@ pub struct UpdateCommand;
 impl Execute for UpdateCommand {
     type Args = UpdateArgs;
 
-    fn execute(&self, _args: &UpdateArgs) {
+    fn run(&self, _args: &Self::Args) -> Result<()> {
         println!("Updating the CLI tool to the latest version...");
         // Implement the logic to update the CLI tool
+        Ok(())
     }
 }

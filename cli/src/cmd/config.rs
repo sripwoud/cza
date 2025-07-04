@@ -1,4 +1,5 @@
 use super::Execute;
+use anyhow::Result;
 use clap::Args;
 
 #[derive(Args)]
@@ -17,7 +18,7 @@ pub struct ConfigCommand;
 impl Execute for ConfigCommand {
     type Args = ConfigArgs;
 
-    fn execute(&self, args: &ConfigArgs) {
+    fn run(&self, args: &Self::Args) -> Result<()> {
         if let Some(ref value) = args.set {
             println!("Setting configuration value: {}", value);
             // Implement the logic to set a configuration value
@@ -26,5 +27,6 @@ impl Execute for ConfigCommand {
             println!("Getting configuration value: {}", value);
             // Implement the logic to get a configuration value
         }
+        Ok(())
     }
 }
