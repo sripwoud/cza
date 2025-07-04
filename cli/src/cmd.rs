@@ -1,3 +1,4 @@
+use crate::output;
 use anyhow::Result;
 
 pub mod config;
@@ -12,7 +13,7 @@ pub trait Execute {
 
     fn execute(&self, args: &Self::Args) {
         if let Err(e) = self.run(args) {
-            eprintln!("Error: {}", e);
+            output::format_error(&e);
             std::process::exit(1);
         }
     }

@@ -1,4 +1,5 @@
 use super::Execute;
+use crate::output;
 use anyhow::{anyhow, Result};
 use cargo_generate::{generate, GenerateArgs, TemplatePath};
 use clap::Args;
@@ -28,6 +29,7 @@ struct TemplateInfo {
     name: String,
     description: String,
     repository: String,
+    #[allow(dead_code)]
     frameworks: Vec<String>,
 }
 
@@ -37,10 +39,10 @@ impl Execute for NewCommand {
     type Args = NewArgs;
 
     fn run(&self, args: &Self::Args) -> Result<()> {
-        println!(
+        output::step(&format!(
             "Creating new {} project: {}",
             args.template, args.project_name
-        );
+        ));
 
         // Load embedded template registry
         let registry = self.load_template_registry()?;
@@ -53,8 +55,8 @@ impl Execute for NewCommand {
             )
         })?;
 
-        println!("Using template: {}", template_info.name);
-        println!("Description: {}", template_info.description);
+        output::info(&format!("Using template: {}", template_info.name));
+        output::info(&format!("Description: {}", template_info.description));
 
         // Validate project name
         self.validate_project_name(&args.project_name)?;
@@ -87,15 +89,12 @@ impl Execute for NewCommand {
         };
 
         // Generate project using cargo-generate
-        println!("Generating project from template...");
+        output::step("Generating project from template...");
         match generate(generate_args) {
             Ok(output_dir) => {
-                println!("✅ Project created successfully!");
-                println!("📁 Location: {}", output_dir.display());
-                println!();
-                println!("Next steps:");
-                println!("  cd {}", args.project_name);
-                println!("  mise run dev");
+                output::success("Project created successfully!");
+                output::directory(&output_dir.display().to_string());
+                output::next_steps(&[&format!("cd {}", args.project_name), "mise run dev"]);
             }
             Err(e) => {
                 return Err(anyhow!("Failed to generate project: {}", e));

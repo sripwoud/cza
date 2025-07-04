@@ -7,5 +7,6 @@ edition.workspace = true
 anyhow = "1.0"
 cargo-generate = "0.21"
 clap.workspace = true
+console = "0.15"
 serde = { version = "1.0", features = ["derive"] }
 toml = "0.8"

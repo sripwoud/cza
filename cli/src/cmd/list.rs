@@ -1,4 +1,5 @@
 use super::Execute;
+use crate::output;
 use anyhow::{anyhow, Result};
 use clap::Args;
 use serde::Deserialize;
@@ -34,11 +35,11 @@ impl Execute for ListCommand {
         let registry = self.load_template_registry()?;
 
         if registry.templates.is_empty() {
-            println!("No templates available.");
+            output::warning("No templates available.");
             return Ok(());
         }
 
-        println!("Available templates:\n");
+        output::header("Available templates");
 
         // Sort templates by name for consistent output
         let mut templates: Vec<_> = registry.templates.iter().collect();
@@ -46,38 +47,31 @@ impl Execute for ListCommand {
 
         for (template_key, template_info) in templates {
             if args.detailed {
-                self.print_detailed_template(template_key, template_info);
+                output::template_detailed(
+                    template_key,
+                    &template_info.name,
+                    &template_info.description,
+                    &template_info.frameworks,
+                    &template_info.repository,
+                );
             } else {
-                self.print_simple_template(template_key, template_info);
+                output::template_item(template_key, &template_info.description);
             }
         }
 
         if !args.detailed {
-            println!("\nUse 'cza list --detailed' for more information about templates.");
+            output::info("Use 'cza list --detailed' for more information about templates.");
         }
 
-        println!("\nTo create a new project:");
-        println!("  cza new <template> <project-name>");
-        println!("  Example: cza new noir-vite my-zk-app");
+        output::header("To create a new project");
+        output::command_example("General syntax", "cza new <template> <project-name>");
+        output::command_example("Example", "cza new noir-vite my-zk-app");
 
         Ok(())
     }
 }
 
 impl ListCommand {
-    fn print_simple_template(&self, key: &str, info: &TemplateInfo) {
-        println!("  {} - {}", key, info.name);
-    }
-
-    fn print_detailed_template(&self, key: &str, info: &TemplateInfo) {
-        println!("📦 {}", key);
-        println!("   Name: {}", info.name);
-        println!("   Description: {}", info.description);
-        println!("   Frameworks: {}", info.frameworks.join(", "));
-        println!("   Repository: {}", info.repository);
-        println!();
-    }
-
     fn load_template_registry(&self) -> Result<TemplateRegistry> {
         // Load embedded templates.toml
         let templates_toml = include_str!("../../templates.toml");
