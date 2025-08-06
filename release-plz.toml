@@ -1,4 +1,6 @@
+[workspace]
+release_commits = "^(feat|fix|perf|refactor):"
+
 [[package]]
 name = "cza"
 git_release_name = "v{{ version }}"
-release_commits = "^(feat|fix|perf|refactor):"

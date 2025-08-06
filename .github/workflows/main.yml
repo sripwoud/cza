@@ -77,7 +77,13 @@ jobs:
   release:
     name: Release-plz
     needs: [changed-files, test]
-    if: needs.changed-files.outputs.any_rs_changed == 'true' && github.ref == 'refs/heads/main'
+    if: |
+      always() && !cancelled() && !failure() &&
+      github.ref == 'refs/heads/main' &&
+      (
+        (github.event_name != 'workflow_dispatch' && needs.changed-files.outputs.any_rs_changed == 'true') ||
+        (github.event_name == 'workflow_dispatch')
+      )
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
