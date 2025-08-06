@@ -18,8 +18,8 @@ jobs:
         id: changed-files
         with:
           files: |
-            **/src/**/*.rs
-            Cargo.toml
+            **/*.rs
+            **/Cargo.toml
             Cargo.lock
 
   check:
