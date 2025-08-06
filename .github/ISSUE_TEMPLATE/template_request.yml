@@ -1,0 +1,77 @@
+name: 🎯 New Template Request
+description: Request support for a new ZK framework template
+title: "🎯 [Template]: Add support for "
+labels: ["template", "enhancement"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for requesting a new template! Template contributions are the most impactful way to help the ZK community.
+
+  - type: input
+    id: framework
+    attributes:
+      label: ZK Framework
+      description: What ZK framework should this template support?
+      placeholder: "e.g., Cairo, Risc0, o1js, Leo, Lurk"
+    validations:
+      required: true
+
+  - type: input
+    id: frontend
+    attributes:
+      label: Frontend Stack
+      description: What frontend technology should be paired with it?
+      placeholder: "e.g., Vite + React, Next.js, SvelteKit"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Template Description
+      description: Describe what this template should include and its use cases.
+      placeholder: This template would provide...
+    validations:
+      required: true
+
+  - type: textarea
+    id: ecosystem
+    attributes:
+      label: Framework Ecosystem
+      description: Provide information about the ZK framework's ecosystem, documentation, and community.
+      placeholder: |
+        - Framework documentation:
+        - Package manager:
+        - Build tools:
+        - Community size:
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: Example Projects
+      description: List any existing projects or examples using this ZK framework.
+      placeholder: |
+        - Project 1: https://...
+        - Project 2: https://...
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution Interest
+      description: Are you interested in contributing to this template?
+      options:
+        - label: I'm interested in helping implement this template
+          required: false
+        - label: I have experience with this ZK framework
+          required: false
+        - label: I can provide testing and feedback
+          required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any other information that would be helpful for implementing this template.

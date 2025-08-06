@@ -1,1 +1,101 @@
-# create-zk-app
+# create-zk-app (cza)
+
+A CLI tool for scaffolding zero-knowledge application projects with modern development tooling and best practices built-in.
+
+## What is cza?
+
+**cza** (create-zk-app) is like `create-react-app` but for zero-knowledge applications. It provides curated, opinionated project templates that combine ZK frameworks with modern frontend stacks, complete with development tooling and CI/CD setup.
+
+## Features
+
+- **🚀 Quick Project Setup** - Generate complete ZK projects in seconds
+- **🎯 Opinionated Templates** - Pre-configured with best practices and modern tooling
+- **🔧 Development Ready** - Includes mise, git hooks, formatting, linting, and CI/CD
+- **🌐 Full Stack** - ZK circuits + modern frontend (Vite + TanStack)
+- **🛠️ Smart Setup** - Automatic dependency installation and project initialization
+
+## Quick Start
+
+### Installation
+
+```bash
+cargo install cza
+```
+
+### Create Your First ZK Project
+
+```bash
+# List available templates
+cza list
+
+# Create a new Noir + Vite project
+cza new noir-vite my-zk-app
+
+# Navigate and start developing
+cd my-zk-app
+mise run dev
+```
+
+## Available Templates
+
+- **`noir-vite`** - Noir zero-knowledge circuits with Vite + React + TanStack frontend
+
+More templates coming soon: Cairo, Risc0, o1js, and more!
+
+## Example Usage
+
+```bash
+# List all available templates with details
+cza list --detailed
+
+# Create a project with a specific template
+cza new noir-vite awesome-zk-project
+
+# The generated project includes:
+# ├── circuit/          # Noir ZK circuit code
+# ├── web/              # Vite React frontend
+# ├── mise.toml         # Development environment
+# ├── hk.pkl           # Git hooks configuration
+# └── .github/         # CI/CD workflows
+```
+
+## How It Works
+
+**cza** is built in Rust and uses:
+
+- **[cargo-generate](https://github.com/cargo-generate/cargo-generate)** for template processing
+- **Template repositories** hosted on GitHub with Handlebars variable substitution
+- **Automatic setup** via post-generation scripts that install tools and configure the environment
+- **Embedded registry** for fast template discovery and listing
+
+Each template is a complete, working project that includes:
+
+- ZK framework setup (Noir, Cairo, etc.)
+- Modern frontend stack (Vite + TanStack Router/Query/Form)
+- Development tooling (mise, dprint, biome, convco)
+- Git hooks and CI/CD workflows
+- Ready-to-use examples and documentation
+
+## Development Stack
+
+Templates come pre-configured with:
+
+| Feature                                | Tool                                                                                          | Purpose                                      |
+| -------------------------------------- | --------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| Build                                  | [vite](https://vite.dev/)                                                                     | Fast frontend build tool                     |
+| CSS                                    | [tailwind](https://tailwindcss.com/)                                                          | Utility-first CSS framework                  |
+| Continuous Integration                 | [GitHub Actions](https://docs.github.com/en/actions)                                          | Automated testing, formatting, and releases  |
+| Conventional Commits                   | [convco](https://convco.github.io/)                                                           | Semantic versioning and changelog generation |
+| Conventional PR Titles                 | [amannn/action-semantic-pull-request](https://github.com/amannn/action-semantic-pull-request) | Enforce semantic PR titles for squash merges |
+| Deployment                             | [GitHub Pages](https://pages.github.com/)                                                     | Static site hosting and deployment           |
+| Environment, Runtime & Task Management | [mise](https://mise.jdx.dev/)                                                                 | Tool and language version management         |
+| Formatting                             | [dprint](https://dprint.dev/)                                                                 | Consistent code formatting across languages  |
+| Git Hooks                              | [hk](https://github.com/comtrya/hk)                                                           | Automated code quality checks                |
+| Import Aliases                         | [typescript paths](https://www.typescriptlang.org/tsconfig#paths)                             | Clean import paths with @ prefixes           |
+| Linting                                | [biome](https://biomejs.dev/)                                                                 | Fast linting and formatting for JS/TS        |
+| Routing                                | [@tanstack/react-router](https://tanstack.com/router/latest)                                  | Type-safe React routing                      |
+| Runtime                                | [bun](https://bun.sh/)                                                                        | Fast JavaScript runtime and package manager  |
+| State                                  | [jotai](https://jotai.org/)                                                                   | Atomic state management for React            |
+| Typings                                | [typescript](https://www.typescriptlang.org/)                                                 | Static type checking for JavaScript          |
+
+## [Contributing](.github/CONTRIBUTING.md)
