@@ -18,6 +18,8 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2.7.3
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - name: Build docs
         run: |
           make build.docs
