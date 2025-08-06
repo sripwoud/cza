@@ -79,3 +79,67 @@ impl ListCommand {
             .map_err(|e| anyhow!("Failed to parse template registry: {}", e))
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_list_command_execute() {
+        let cmd = ListCommand;
+        let args = ListArgs { detailed: false };
+        // Should not panic and should return Ok
+        assert!(cmd.run(&args).is_ok());
+    }
+
+    #[test]
+    fn test_list_detailed_command_execute() {
+        let cmd = ListCommand;
+        let args = ListArgs { detailed: true };
+        // Should not panic and should return Ok
+        assert!(cmd.run(&args).is_ok());
+    }
+
+    #[test]
+    fn test_template_registry_loading() {
+        let cmd = ListCommand;
+        let registry = cmd.load_template_registry().unwrap();
+
+        // Should have at least the noir-vite template
+        assert!(registry.templates.contains_key("noir-vite"));
+
+        let noir_template = &registry.templates["noir-vite"];
+        assert!(!noir_template.name.is_empty());
+        assert!(!noir_template.description.is_empty());
+        assert!(noir_template.repository.starts_with("https://"));
+        assert!(!noir_template.frameworks.is_empty());
+    }
+
+    #[test]
+    fn test_template_info_structure() {
+        let template = TemplateInfo {
+            name: "Test Template".to_string(),
+            description: "A test template".to_string(),
+            repository: "https://github.com/test/test".to_string(),
+            frameworks: vec!["test".to_string(), "framework".to_string()],
+        };
+
+        // Test that template has expected properties
+        assert_eq!(template.name, "Test Template");
+        assert_eq!(template.frameworks.len(), 2);
+        assert!(template.frameworks.contains(&"test".to_string()));
+    }
+
+    #[test]
+    fn test_templates_sorting() {
+        let cmd = ListCommand;
+        let registry = cmd.load_template_registry().unwrap();
+
+        // Collect template keys and verify they can be sorted
+        let mut template_keys: Vec<_> = registry.templates.keys().collect();
+        template_keys.sort();
+
+        // Should be sortable without panic
+        assert!(template_keys.len() > 0);
+    }
+}

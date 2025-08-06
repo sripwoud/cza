@@ -1,12 +1,29 @@
 [package]
 name = "cza"
-version = "0.1.0"
+version = "0.1.0-alpha.1"
+authors = ["sripwoud"]
+categories = ["command-line-utilities", "development-tools"]
 edition.workspace = true
+keywords = ["cli", "template", "zero-knowledge", "noir", "cairo"]
+license = "MIT OR Apache-2.0"
+readme = "../README.md"
+repository = "https://github.com/sripwoud/cza"
+description = "CLI tool for scaffolding zero-knowledge application projects"
+
+[features]
+integration = []
 
 [dependencies]
-anyhow = "1.0"
-cargo-generate = "0.21"
+anyhow.workspace = true
+cargo-generate.workspace = true
 clap.workspace = true
-console = "0.15"
-serde = { version = "1.0", features = ["derive"] }
-toml = "0.8"
+console.workspace = true
+serde.workspace = true
+toml.workspace = true
+
+[dev-dependencies]
+assert_cmd.workspace = true
+env_logger.workspace = true
+predicates.workspace = true
+snapbox.workspace = true
+tempfile.workspace = true

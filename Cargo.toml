@@ -4,4 +4,16 @@ package = { edition = "2021" }
 resolver = "2"
 
 [workspace.dependencies]
+anyhow = "1.0"
+cargo-generate = "0.21"
 clap = { version = "4.5.29", features = ["derive"] }
+console = "0.15"
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.8"
+
+# Test dependencies
+assert_cmd = "2.0"
+env_logger = "0.11"
+predicates = "3.0"
+snapbox = "0.6"
+tempfile = "3.8"
