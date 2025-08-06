@@ -38,7 +38,9 @@ mise run dev
 
 ## Available Templates
 
-- **`noir-vite`** - Noir zero-knowledge circuits with Vite + React + TanStack frontend
+| Template    | Description                                        | ZK Framework                   | Frontend                | Repository                                                 |
+| ----------- | -------------------------------------------------- | ------------------------------ | ----------------------- | ---------------------------------------------------------- |
+| `noir-vite` | Zero-knowledge circuits with modern frontend stack | [Noir](https://noir-lang.org/) | Vite + React + TanStack | [cza-noir-vite](https://github.com/sripwoud/cza-noir-vite) |
 
 More templates coming soon: Cairo, Risc0, o1js, and more!
 
