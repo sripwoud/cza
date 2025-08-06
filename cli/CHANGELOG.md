@@ -1,0 +1,23 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [0.1.0-alpha.1](https://github.com/sripwoud/cza/releases/tag/v0.1.0-alpha.1) - 2025-08-06
+
+### Added
+
+- run setup during new command
+- format stdout/sterr
+- define create and list commands
+- scaffold clap cli ([#1](https://github.com/sripwoud/cza/pull/1))
+
+### Other
+
+- define unit and integrations tests
+- update Execute trait
+- Initial commit
