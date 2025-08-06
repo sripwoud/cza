@@ -1,15 +1,4 @@
 [[package]]
 name = "cza"
 git_release_name = "v{{ version }}"
-
-# Exclude documentation and non-cli changes from releases
-exclude_paths = [
-  ".convco",
-  ".dprint.jsonc",
-  ".github",
-  "hk.pkl",
-  "mise.toml",
-  "release-plz.toml",
-  "*.md",
-  "setup",
-]
+release_commits = "^(feat|fix|perf|refactor):"
