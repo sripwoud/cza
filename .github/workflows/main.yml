@@ -10,14 +10,14 @@ jobs:
   changed-files:
     runs-on: ubuntu-latest
     outputs:
-      any_rs_changed: ${{ steps.filter.outputs.any_changed }}
+      any_rs_changed: ${{ steps.changed-files.outputs.any_changed }}
     steps:
       - uses: actions/checkout@v4
       - uses: tj-actions/changed-files@v44
         id: changed-files
         with:
           files: |
-            src/**/*.rs
+            **/src/**/*.rs
             Cargo.toml
             Cargo.lock
 
