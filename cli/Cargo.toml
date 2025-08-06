@@ -6,9 +6,13 @@ categories = ["command-line-utilities", "development-tools"]
 edition.workspace = true
 keywords = ["cli", "template", "zero-knowledge", "noir", "cairo"]
 license = "MIT OR Apache-2.0"
-readme = "../README.md"
+readme = "README.md"
 repository = "https://github.com/sripwoud/cza"
 description = "CLI tool for scaffolding zero-knowledge application projects"
+
+[[bin]]
+name = "cza"
+path = "src/main.rs"
 
 [features]
 integration = []
