@@ -4,11 +4,11 @@
 [templates.noir-vite]
 name = "Noir + Vite + TanStack"
 description = "Zero-knowledge app with Noir and modern frontend stack (Vite + TanStack Router/Query/State/Form)"
-repository = "https://github.com/sripwoud/cza-template-noir-vite"
+repository = "https://github.com/sripwoud/cza-noir-vite"
 frameworks = ["noir", "vite", "tanstack", "react", "typescript"]
 
-[templates.cairo-vite]
-name = "Cairo + Vite + TanStack"
-description = "StarkNet app with Cairo and modern frontend stack (Vite + TanStack Router/Query/State/Form)"
-repository = "https://github.com/sripwoud/cza-template-cairo-vite"
-frameworks = ["cairo", "starknet", "vite", "tanstack", "react", "typescript"]
+# [templates.cairo-vite]
+# name = "Cairo + Vite + TanStack"
+# description = "StarkNet app with Cairo and modern frontend stack (Vite + TanStack Router/Query/State/Form)"
+# repository = "https://github.com/sripwoud/cza-template-cairo-vite"
+# frameworks = ["cairo", "starknet", "vite", "tanstack", "react", "typescript"]

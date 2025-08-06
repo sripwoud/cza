@@ -94,6 +94,35 @@ impl Execute for NewCommand {
             Ok(output_dir) => {
                 output::success("Project created successfully!");
                 output::directory(&output_dir.display().to_string());
+
+                // Run setup script if it exists
+                let setup_script = output_dir.join("setup");
+                if setup_script.exists() {
+                    output::step("Running project setup...");
+
+                    let status = std::process::Command::new("sh")
+                        .arg(setup_script)
+                        .current_dir(&output_dir)
+                        .status();
+
+                    match status {
+                        Ok(exit_status) if exit_status.success() => {
+                            output::success("Setup completed successfully!");
+                        }
+                        Ok(exit_status) => {
+                            output::warning(&format!(
+                                "Setup script exited with status: {}",
+                                exit_status
+                            ));
+                            output::info("You can run './setup' manually to complete the setup");
+                        }
+                        Err(e) => {
+                            output::warning(&format!("Could not run setup script: {}", e));
+                            output::info("Please run './setup' manually to complete the setup");
+                        }
+                    }
+                }
+
                 output::next_steps(&[&format!("cd {}", args.project_name), "mise run dev"]);
             }
             Err(e) => {
