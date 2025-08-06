@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0-alpha.2](https://github.com/sripwoud/cza/compare/v0.1.0-alpha.1...v0.1.0-alpha.2) - 2025-08-06
+
+### Fixed
+
+- define binary in Cargo.toml
+
+### Other
+
+- add README, CONTRIBUTING and issue/pr templates
+- release v0.1.0-alpha.1 ([#4](https://github.com/sripwoud/cza/pull/4))
+
 ## [0.1.0-alpha.1](https://github.com/sripwoud/cza/releases/tag/v0.1.0-alpha.1) - 2025-08-06
 
 ### Added
