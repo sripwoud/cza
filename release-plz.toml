@@ -1,0 +1,3 @@
+[[package]]
+name = "cza"
+git_release_name = "v{{ version }}"
