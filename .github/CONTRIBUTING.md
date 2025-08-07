@@ -157,10 +157,22 @@ Our CI will automatically verify:
 
 The most impactful contributions! Create templates for new ZK frameworks:
 
-- Templates should follow the structure in [cza-noir-vite](https://github.com/sripwoud/cza-noir-vite)
-- Include complete development stack (ZK framework + Vite + TanStack)
-- Add to `cli/templates.toml` registry
-- Test end-to-end project generation
+**Important**: Templates are maintained in a separate repository at [cza-templates](https://github.com/sripwoud/cza-templates).
+
+To contribute a new template:
+
+1. Create an issue at [cza-templates/issues](https://github.com/sripwoud/cza-templates/issues) to discuss your template idea
+2. Fork the [cza-templates](https://github.com/sripwoud/cza-templates) repository
+3. Create your template in a new subfolder following the existing structure
+4. Submit a PR to the cza-templates repository
+5. Once merged, create a PR here to update `cli/templates.toml` with your new template entry
+
+Template requirements:
+
+- Include complete development stack (e.g ZK framework + Vite + TanStack)
+- Follow the existing template structure and conventions
+- Include a `cargo-generate.toml` file for template configuration
+- Test end-to-end project generation before submitting
 
 ### 🔧 CLI Features
 

@@ -46,37 +46,37 @@ impl Output {
     /// Print a success message with green styling
     pub fn success(&self, message: &str) {
         let styled_message = style(message).green().bold();
-        println!("{} {}", SUCCESS_EMOJI, styled_message);
+        println!("{SUCCESS_EMOJI} {styled_message}");
     }
 
     /// Print an info message with blue styling
     pub fn info(&self, message: &str) {
         let styled_message = style(message).blue();
-        println!("{} {}", INFO_EMOJI, styled_message);
+        println!("{INFO_EMOJI} {styled_message}");
     }
 
     /// Print a warning message with yellow styling
     pub fn warning(&self, message: &str) {
         let styled_message = style(message).yellow().bold();
-        println!("{} {}", WARNING_EMOJI, styled_message);
+        println!("{WARNING_EMOJI} {styled_message}");
     }
 
     /// Print an error message with red styling
     pub fn error(&self, message: &str) {
         let styled_message = style(message).red().bold();
-        eprintln!("{} {}", ERROR_EMOJI, styled_message);
+        eprintln!("{ERROR_EMOJI} {styled_message}");
     }
 
     /// Print a step message with cyan styling (for progress indication)
     pub fn step(&self, message: &str) {
         let styled_message = style(message).cyan();
-        println!("{} {}", STEP_EMOJI, styled_message);
+        println!("{STEP_EMOJI} {styled_message}");
     }
 
     /// Print a directory path with consistent styling
     pub fn directory(&self, path: &str) {
         let styled_path = style(path).magenta().bold();
-        println!("{} Location: {}", DIRECTORY_EMOJI, styled_path);
+        println!("{DIRECTORY_EMOJI} Location: {styled_path}");
     }
 
     /// Print next steps with consistent styling
@@ -87,11 +87,11 @@ impl Output {
 
         println!();
         let styled_header = style("Next steps:").cyan().bold();
-        println!("{} {}", NEXT_EMOJI, styled_header);
+        println!("{NEXT_EMOJI} {styled_header}");
 
         for step in steps {
             let styled_step = style(step).dim();
-            println!("  {}", styled_step);
+            println!("  {styled_step}");
         }
     }
 
@@ -99,33 +99,33 @@ impl Output {
     pub fn command_example(&self, description: &str, command: &str) {
         let styled_desc = style(description).dim();
         let styled_command = style(command).green().bold();
-        println!("  {}: {}", styled_desc, styled_command);
+        println!("  {styled_desc}: {styled_command}");
     }
 
     /// Print a header for sections
     pub fn header(&self, title: &str) {
         println!();
         let styled_title = style(title).bold().underlined();
-        println!("{}", styled_title);
+        println!("{styled_title}");
         println!();
     }
 
     /// Print a plain message without styling (for regular content)
     pub fn plain(&self, message: &str) {
-        println!("{}", message);
+        println!("{message}");
     }
 
     /// Print a styled key-value pair
     pub fn key_value(&self, key: &str, value: &str) {
         let styled_key = style(key).bold();
-        println!("   {}: {}", styled_key, value);
+        println!("   {styled_key}: {value}");
     }
 
     /// Print a template item with consistent styling
     pub fn template_item(&self, name: &str, description: &str) {
         let styled_name = style(name).green().bold();
         let styled_desc = style(description).dim();
-        println!("  {} - {}", styled_name, styled_desc);
+        println!("  {styled_name} - {styled_desc}");
     }
 
     /// Print detailed template information
@@ -138,7 +138,7 @@ impl Output {
         repository: &str,
     ) {
         let styled_key = style(key).green().bold();
-        println!("{} {}", STEP_EMOJI, styled_key);
+        println!("{STEP_EMOJI} {styled_key}");
         self.key_value("Name", name);
         self.key_value("Description", description);
         self.key_value("Frameworks", &frameworks.join(", "));

@@ -29,7 +29,7 @@ struct TemplateInfo {
     name: String,
     description: String,
     repository: String,
-    #[allow(dead_code)]
+    subfolder: String,
     frameworks: Vec<String>,
 }
 
@@ -68,9 +68,10 @@ impl Execute for NewCommand {
             .or_else(|| self.get_git_author())
             .unwrap_or_else(|| "Developer".to_string());
 
-        // Create template path
+        // Create template path with git repository and subfolder
         let template_path = TemplatePath {
             git: Some(template_info.repository.clone()),
+            subfolder: Some(template_info.subfolder.clone()),
             ..Default::default()
         };
 
@@ -111,13 +112,12 @@ impl Execute for NewCommand {
                         }
                         Ok(exit_status) => {
                             output::warning(&format!(
-                                "Setup script exited with status: {}",
-                                exit_status
+                                "Setup script exited with status: {exit_status}"
                             ));
                             output::info("You can run './setup' manually to complete the setup");
                         }
                         Err(e) => {
-                            output::warning(&format!("Could not run setup script: {}", e));
+                            output::warning(&format!("Could not run setup script: {e}"));
                             output::info("Please run './setup' manually to complete the setup");
                         }
                     }
@@ -131,64 +131,6 @@ impl Execute for NewCommand {
         }
 
         Ok(())
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_validate_project_name_valid() {
-        let cmd = NewCommand;
-
-        assert!(cmd.validate_project_name("valid-name").is_ok());
-        assert!(cmd.validate_project_name("valid_name").is_ok());
-        assert!(cmd.validate_project_name("validName").is_ok());
-        assert!(cmd.validate_project_name("a").is_ok());
-    }
-
-    #[test]
-    fn test_validate_project_name_invalid() {
-        let cmd = NewCommand;
-
-        assert!(cmd.validate_project_name("").is_err());
-        assert!(cmd.validate_project_name("123invalid").is_err());
-        assert!(cmd.validate_project_name("invalid name").is_err());
-        assert!(cmd.validate_project_name("invalid/name").is_err());
-        assert!(cmd.validate_project_name("invalid.name").is_err());
-    }
-
-    // Removed test_check_directory_exists since method is private
-
-    #[test]
-    fn test_template_registry_parsing() {
-        let toml_content = r#"
-[templates.test-template]
-name = "Test Template"
-description = "A test template"
-repository = "https://github.com/test/test"
-frameworks = ["test"]
-"#;
-
-        let registry: TemplateRegistry = toml::from_str(toml_content).unwrap();
-        assert!(registry.templates.contains_key("test-template"));
-
-        let template = &registry.templates["test-template"];
-        assert_eq!(template.name, "Test Template");
-        assert_eq!(template.description, "A test template");
-        assert_eq!(template.repository, "https://github.com/test/test");
-        assert_eq!(template.frameworks, vec!["test"]);
-    }
-
-    #[test]
-    fn test_get_git_author_fallback() {
-        let cmd = NewCommand;
-
-        // This will likely return None unless git is configured in test environment
-        let author = cmd.get_git_author();
-        // Just verify it doesn't panic - actual value depends on test environment
-        assert!(author.is_none() || author.unwrap().len() > 0);
     }
 }
 
@@ -228,7 +170,7 @@ impl NewCommand {
 
     fn get_git_author(&self) -> Option<String> {
         std::process::Command::new("git")
-            .args(&["config", "user.name"])
+            .args(["config", "user.name"])
             .output()
             .ok()
             .and_then(|output| {
@@ -241,5 +183,65 @@ impl NewCommand {
                     None
                 }
             })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_validate_project_name_valid() {
+        let cmd = NewCommand;
+
+        assert!(cmd.validate_project_name("valid-name").is_ok());
+        assert!(cmd.validate_project_name("valid_name").is_ok());
+        assert!(cmd.validate_project_name("validName").is_ok());
+        assert!(cmd.validate_project_name("a").is_ok());
+    }
+
+    #[test]
+    fn test_validate_project_name_invalid() {
+        let cmd = NewCommand;
+
+        assert!(cmd.validate_project_name("").is_err());
+        assert!(cmd.validate_project_name("123invalid").is_err());
+        assert!(cmd.validate_project_name("invalid name").is_err());
+        assert!(cmd.validate_project_name("invalid/name").is_err());
+        assert!(cmd.validate_project_name("invalid.name").is_err());
+    }
+
+    // Removed test_check_directory_exists since method is private
+
+    #[test]
+    fn test_template_registry_parsing() {
+        let toml_content = r#"
+[templates.test-template]
+name = "Test Template"
+description = "A test template"
+repository = "https://github.com/test/test"
+subfolder = "test-template"
+frameworks = ["test"]
+"#;
+
+        let registry: TemplateRegistry = toml::from_str(toml_content).unwrap();
+        assert!(registry.templates.contains_key("test-template"));
+
+        let template = &registry.templates["test-template"];
+        assert_eq!(template.name, "Test Template");
+        assert_eq!(template.description, "A test template");
+        assert_eq!(template.repository, "https://github.com/test/test");
+        assert_eq!(template.subfolder, "test-template");
+        assert_eq!(template.frameworks, vec!["test"]);
+    }
+
+    #[test]
+    fn test_get_git_author_fallback() {
+        let cmd = NewCommand;
+
+        // This will likely return None unless git is configured in test environment
+        let author = cmd.get_git_author();
+        // Just verify it doesn't panic - actual value depends on test environment
+        assert!(author.is_none() || !author.unwrap().is_empty());
     }
 }

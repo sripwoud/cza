@@ -51,7 +51,7 @@ fn test_title_case_formatting() {
     fn title_case(input: &str) -> String {
         // Handle various naming conventions: kebab-case, snake_case, camelCase, PascalCase
         input
-            .replace(|c: char| c == '-' || c == '_', " ") // Replace dashes and underscores with spaces
+            .replace(['-', '_'], " ") // Replace dashes and underscores with spaces
             .split_whitespace()
             .map(|word| {
                 let mut chars = word.chars();
@@ -76,6 +76,6 @@ fn test_title_case_formatting() {
     ];
 
     for (input, expected) in test_cases {
-        assert_eq!(title_case(input), expected, "Failed for input: {}", input);
+        assert_eq!(title_case(input), expected, "Failed for input: {input}");
     }
 }

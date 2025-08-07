@@ -38,9 +38,11 @@ mise run dev
 
 ## Available Templates
 
-| Template    | Description                                        | ZK Framework                   | Frontend                | Repository                                                 |
-| ----------- | -------------------------------------------------- | ------------------------------ | ----------------------- | ---------------------------------------------------------- |
-| `noir-vite` | Zero-knowledge circuits with modern frontend stack | [Noir](https://noir-lang.org/) | Vite + React + TanStack | [cza-noir-vite](https://github.com/sripwoud/cza-noir-vite) |
+Templates are hosted at [cza-templates](https://github.com/sripwoud/cza-templates).
+
+| Template    | Description                                        | ZK Framework                   | Frontend                |
+| ----------- | -------------------------------------------------- | ------------------------------ | ----------------------- |
+| `noir-vite` | Zero-knowledge circuits with modern frontend stack | [Noir](https://noir-lang.org/) | Vite + React + TanStack |
 
 More templates coming soon: Cairo, Risc0, o1js, and more!
 
