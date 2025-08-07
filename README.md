@@ -1,4 +1,14 @@
-# create-zk-app (cza)
+<h1 align="center">create-zk-app (cza)</h1>
+<p align="center">
+  <a href="https://crates.io/crates/cza">
+    <img alt="Crates.io Version" src="https://img.shields.io/crates/v/cza">
+  </a>
+  <br>
+  <a href="https://github.com/sripwoud/cza/actions?query=workflow%3Amain"><img alt="GitHub Workflow main" src="https://img.shields.io/github/actions/workflow/status/sripwoud/cza/main.yml?branch=main&label=check&logo=github">
+  </a>
+  <a href='https://coveralls.io/github/sripwoud/cza?branch=main'>
+    <img src='https://coveralls.io/repos/github/sripwoud/cza/badge.svg?branch=main' alt='Coverage Status' /></a>
+</p>
 
 A CLI tool for scaffolding zero-knowledge application projects with modern development tooling and best practices built-in.
 
