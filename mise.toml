@@ -23,7 +23,7 @@ run = "cargo run --all-features --release"
 [tasks.test]
 alias = "t"
 description = "Run the tests"
-run = "cargo nextest run"
+run = "cargo llvm-cov nextest --all-features --all-targets --workspace"
 
 [tools]
 "cargo:cargo-llvm-cov" = "latest"

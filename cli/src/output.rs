@@ -253,3 +253,174 @@ pub fn format_error(err: &anyhow::Error) {
         error(&error_msg);
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use anyhow;
+
+    #[test]
+    fn test_output_new() {
+        let _output = Output::new();
+        // Just ensure it creates successfully
+        assert!(true);
+    }
+
+    #[test]
+    fn test_output_default() {
+        let _output = Output::default();
+        // Just ensure it creates successfully
+        assert!(true);
+    }
+
+    #[test]
+    fn test_success() {
+        let output = Output::new();
+        output.success("Test success message");
+    }
+
+    #[test]
+    fn test_info() {
+        let output = Output::new();
+        output.info("Test info message");
+    }
+
+    #[test]
+    fn test_warning() {
+        let output = Output::new();
+        output.warning("Test warning message");
+    }
+
+    #[test]
+    fn test_error() {
+        let output = Output::new();
+        output.error("Test error message");
+    }
+
+    #[test]
+    fn test_step() {
+        let output = Output::new();
+        output.step("Test step message");
+    }
+
+    #[test]
+    fn test_directory() {
+        let output = Output::new();
+        output.directory("/test/path");
+    }
+
+    #[test]
+    fn test_next_steps_empty() {
+        let output = Output::new();
+        output.next_steps(&[]);
+    }
+
+    #[test]
+    fn test_next_steps_with_items() {
+        let output = Output::new();
+        output.next_steps(&["Step 1", "Step 2", "Step 3"]);
+    }
+
+    #[test]
+    fn test_command_example() {
+        let output = Output::new();
+        output.command_example("Run the app", "npm start");
+    }
+
+    #[test]
+    fn test_header() {
+        let output = Output::new();
+        output.header("Test Header");
+    }
+
+    #[test]
+    fn test_plain() {
+        let output = Output::new();
+        output.plain("Plain message");
+    }
+
+    #[test]
+    fn test_key_value() {
+        let output = Output::new();
+        output.key_value("Name", "Test Value");
+    }
+
+    #[test]
+    fn test_template_item() {
+        let output = Output::new();
+        output.template_item("noir-vite", "Noir with Vite frontend");
+    }
+
+    #[test]
+    fn test_template_detailed() {
+        let output = Output::new();
+        let frameworks = vec!["Noir".to_string(), "Vite".to_string()];
+        output.template_detailed(
+            "noir-vite",
+            "Noir Vite Template",
+            "A template with Noir and Vite",
+            &frameworks,
+            "github.com/example/repo",
+        );
+    }
+
+    #[test]
+    fn test_clear() {
+        let output = Output::new();
+        output.clear(); // Should not panic
+    }
+
+    #[test]
+    fn test_convenience_functions() {
+        success("Test success");
+        info("Test info");
+        warning("Test warning");
+        error("Test error");
+        step("Test step");
+        directory("/test/path");
+        next_steps(&["Step 1", "Step 2"]);
+        command_example("Test", "test command");
+        header("Test Header");
+        plain("Test plain");
+        template_item("template", "description");
+        template_detailed(
+            "key",
+            "name",
+            "desc",
+            &vec!["framework".to_string()],
+            "repo",
+        );
+    }
+
+    #[test]
+    fn test_format_error_template_not_found() {
+        let err = anyhow::anyhow!(
+            "Template 'invalid' not found. Use 'cza list' to see available templates."
+        );
+        format_error(&err);
+    }
+
+    #[test]
+    fn test_format_error_already_exists() {
+        let err = anyhow::anyhow!("Directory already exists");
+        format_error(&err);
+    }
+
+    #[test]
+    fn test_format_error_project_name() {
+        let err = anyhow::anyhow!("Project name contains invalid characters");
+        format_error(&err);
+    }
+
+    #[test]
+    fn test_format_error_generic() {
+        let err = anyhow::anyhow!("Generic error message");
+        format_error(&err);
+    }
+
+    #[test]
+    fn test_format_error_template_not_found_no_split() {
+        let err = anyhow::anyhow!("not found. Use 'cza list'");
+        format_error(&err);
+    }
+}

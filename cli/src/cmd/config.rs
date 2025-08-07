@@ -30,3 +30,56 @@ impl Execute for ConfigCommand {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_config_set() {
+        let command = ConfigCommand;
+        let args = ConfigArgs {
+            set: Some("key=value".to_string()),
+            get: None,
+        };
+
+        let result = command.run(&args);
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn test_config_get() {
+        let command = ConfigCommand;
+        let args = ConfigArgs {
+            set: None,
+            get: Some("key".to_string()),
+        };
+
+        let result = command.run(&args);
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn test_config_no_args() {
+        let command = ConfigCommand;
+        let args = ConfigArgs {
+            set: None,
+            get: None,
+        };
+
+        let result = command.run(&args);
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn test_config_both_args() {
+        let command = ConfigCommand;
+        let args = ConfigArgs {
+            set: Some("key=value".to_string()),
+            get: Some("key".to_string()),
+        };
+
+        let result = command.run(&args);
+        assert!(result.is_ok());
+    }
+}

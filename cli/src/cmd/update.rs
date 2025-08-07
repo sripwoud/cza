@@ -16,3 +16,17 @@ impl Execute for UpdateCommand {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_update_command() {
+        let command = UpdateCommand;
+        let args = UpdateArgs;
+
+        let result = command.run(&args);
+        assert!(result.is_ok());
+    }
+}

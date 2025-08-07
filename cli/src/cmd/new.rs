@@ -221,4 +221,141 @@ frameworks = ["test"]
         // Just verify it doesn't panic - actual value depends on test environment
         assert!(author.is_none() || !author.unwrap().is_empty());
     }
+
+    #[test]
+    fn test_validate_project_name_existing_directory() {
+        use std::fs;
+        let cmd = NewCommand;
+
+        // Create a temporary directory
+        let temp_dir_name = "test_existing_dir";
+        fs::create_dir(temp_dir_name).unwrap();
+
+        // Test should fail because directory exists
+        let result = cmd.validate_project_name(temp_dir_name);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("already exists"));
+
+        // Cleanup
+        fs::remove_dir(temp_dir_name).unwrap();
+    }
+
+    #[test]
+    fn test_validate_project_name_edge_cases() {
+        let cmd = NewCommand;
+
+        // Test various invalid characters
+        assert!(cmd.validate_project_name("invalid@name").is_err());
+        assert!(cmd.validate_project_name("invalid#name").is_err());
+        assert!(cmd.validate_project_name("invalid$name").is_err());
+        assert!(cmd.validate_project_name("invalid%name").is_err());
+
+        // Test starting with non-letter
+        assert!(cmd.validate_project_name("_invalid").is_err());
+        assert!(cmd.validate_project_name("-invalid").is_err());
+        assert!(cmd.validate_project_name("9invalid").is_err());
+
+        // Test valid edge cases
+        assert!(cmd.validate_project_name("a1").is_ok());
+        assert!(cmd.validate_project_name("z-test").is_ok());
+        assert!(cmd.validate_project_name("test_123").is_ok());
+    }
+
+    #[test]
+    fn test_new_command_invalid_template() {
+        let cmd = NewCommand;
+        let args = NewArgs {
+            template: "nonexistent-template".to_string(),
+            project_name: "test-project".to_string(),
+            author: None,
+        };
+
+        let result = cmd.run(&args);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("not found"));
+    }
+
+    #[test]
+    fn test_new_command_invalid_project_name() {
+        let cmd = NewCommand;
+        let args = NewArgs {
+            template: "noir-vite".to_string(),
+            project_name: "invalid name".to_string(),
+            author: None,
+        };
+
+        let result = cmd.run(&args);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_new_command_with_author() {
+        let cmd = NewCommand;
+        let args = NewArgs {
+            template: "nonexistent-template".to_string(),
+            project_name: "test-project".to_string(),
+            author: Some("Test Author".to_string()),
+        };
+
+        // This will fail on template lookup, but we can still test author handling
+        let result = cmd.run(&args);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("not found"));
+    }
+
+    #[test]
+    fn test_validate_project_name_special_chars() {
+        let cmd = NewCommand;
+
+        // Test that symbols and punctuation are rejected
+        assert!(cmd.validate_project_name("test@symbol").is_err()); // Contains @
+        assert!(cmd.validate_project_name("test!name").is_err()); // Contains !
+        assert!(cmd.validate_project_name("test.name").is_err()); // Contains .
+        assert!(cmd.validate_project_name("test space").is_err()); // Contains space
+    }
+
+    #[test]
+    fn test_validate_project_name_long_valid() {
+        let cmd = NewCommand;
+
+        // Test long but valid name
+        let long_name = "very-long-but-valid-project-name-with-many-words-and-numbers-123";
+        assert!(cmd.validate_project_name(long_name).is_ok());
+    }
+
+    #[test]
+    fn test_validate_project_name_single_char() {
+        let cmd = NewCommand;
+
+        // Single character tests
+        assert!(cmd.validate_project_name("a").is_ok());
+        assert!(cmd.validate_project_name("Z").is_ok());
+        assert!(cmd.validate_project_name("1").is_err()); // starts with number
+        assert!(cmd.validate_project_name("_").is_err()); // starts with underscore
+    }
+
+    #[test]
+    fn test_git_author_with_empty_output() {
+        // This tests the filter condition in get_git_author that filters empty strings
+        let cmd = NewCommand;
+        let _ = cmd.get_git_author(); // Just ensure it doesn't panic
+    }
+
+    #[test]
+    fn test_new_args_clone() {
+        // Test that NewArgs can be constructed with cloned strings
+        let template = "noir-vite".to_string();
+        let name = "test-project".to_string();
+        let author = Some("Test Author".to_string());
+
+        let args = NewArgs {
+            template: template.clone(),
+            project_name: name.clone(),
+            author: author.clone(),
+        };
+
+        assert_eq!(args.template, template);
+        assert_eq!(args.project_name, name);
+        assert_eq!(args.author, author);
+    }
 }

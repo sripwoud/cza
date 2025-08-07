@@ -67,3 +67,54 @@ fn test_missing_arguments() {
         .failure()
         .stderr(predicate::str::contains("required"));
 }
+
+#[test]
+fn test_config_command_help() {
+    let mut cmd = Command::cargo_bin("cza").unwrap();
+    cmd.args(["config", "--help"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Configure global settings"));
+}
+
+#[test]
+fn test_config_set_command() {
+    let mut cmd = Command::cargo_bin("cza").unwrap();
+    cmd.args(["config", "--set", "test=value"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(
+            "Setting configuration value: test=value",
+        ));
+}
+
+#[test]
+fn test_config_get_command() {
+    let mut cmd = Command::cargo_bin("cza").unwrap();
+    cmd.args(["config", "--get", "test"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(
+            "Getting configuration value: test",
+        ));
+}
+
+#[test]
+fn test_update_command() {
+    let mut cmd = Command::cargo_bin("cza").unwrap();
+    cmd.arg("update")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Updating the CLI tool"));
+}
+
+#[test]
+fn test_update_command_help() {
+    let mut cmd = Command::cargo_bin("cza").unwrap();
+    cmd.args(["update", "--help"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(
+            "Update the CLI tool to the latest version",
+        ));
+}
