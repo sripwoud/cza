@@ -1,29 +1,13 @@
 use super::Execute;
-use crate::output;
-use anyhow::{anyhow, Result};
+use crate::{output, template};
+use anyhow::Result;
 use clap::Args;
-use serde::Deserialize;
-use std::collections::HashMap;
 
 #[derive(Args)]
 pub struct ListArgs {
     /// Show detailed information about templates
     #[arg(long)]
     detailed: bool,
-}
-
-#[derive(Deserialize)]
-struct TemplateRegistry {
-    templates: HashMap<String, TemplateInfo>,
-}
-
-#[derive(Deserialize)]
-struct TemplateInfo {
-    name: String,
-    description: String,
-    repository: String,
-    subfolder: String,
-    frameworks: Vec<String>,
 }
 
 pub struct ListCommand;
@@ -33,7 +17,7 @@ impl Execute for ListCommand {
 
     fn run(&self, args: &Self::Args) -> Result<()> {
         // Load embedded template registry
-        let registry = self.load_template_registry()?;
+        let registry = template::load_template_registry()?;
 
         if registry.templates.is_empty() {
             output::warning("No templates available.");
@@ -81,14 +65,7 @@ impl Execute for ListCommand {
     }
 }
 
-impl ListCommand {
-    fn load_template_registry(&self) -> Result<TemplateRegistry> {
-        // Load embedded templates.toml
-        let templates_toml = include_str!("../../templates.toml");
-        toml::from_str(templates_toml)
-            .map_err(|e| anyhow!("Failed to parse template registry: {}", e))
-    }
-}
+impl ListCommand {}
 
 #[cfg(test)]
 mod tests {
@@ -112,8 +89,7 @@ mod tests {
 
     #[test]
     fn test_template_registry_loading() {
-        let cmd = ListCommand;
-        let registry = cmd.load_template_registry().unwrap();
+        let registry = template::load_template_registry().unwrap();
 
         // Should have at least the noir-vite template
         assert!(registry.templates.contains_key("noir-vite"));
@@ -127,7 +103,7 @@ mod tests {
 
     #[test]
     fn test_template_info_structure() {
-        let template = TemplateInfo {
+        let template = template::TemplateInfo {
             name: "Test Template".to_string(),
             description: "A test template".to_string(),
             repository: "https://github.com/test/test".to_string(),
@@ -143,8 +119,7 @@ mod tests {
 
     #[test]
     fn test_templates_sorting() {
-        let cmd = ListCommand;
-        let registry = cmd.load_template_registry().unwrap();
+        let registry = template::load_template_registry().unwrap();
 
         // Collect template keys and verify they can be sorted
         let mut template_keys: Vec<_> = registry.templates.keys().collect();

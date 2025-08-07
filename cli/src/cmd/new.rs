@@ -1,10 +1,8 @@
 use super::Execute;
-use crate::output;
+use crate::{output, template};
 use anyhow::{anyhow, Result};
 use cargo_generate::{generate, GenerateArgs, TemplatePath};
 use clap::Args;
-use serde::Deserialize;
-use std::collections::HashMap;
 
 #[derive(Args)]
 pub struct NewArgs {
@@ -19,20 +17,6 @@ pub struct NewArgs {
     author: Option<String>,
 }
 
-#[derive(Deserialize)]
-struct TemplateRegistry {
-    templates: HashMap<String, TemplateInfo>,
-}
-
-#[derive(Deserialize)]
-struct TemplateInfo {
-    name: String,
-    description: String,
-    repository: String,
-    subfolder: String,
-    frameworks: Vec<String>,
-}
-
 pub struct NewCommand;
 
 impl Execute for NewCommand {
@@ -45,7 +29,7 @@ impl Execute for NewCommand {
         ));
 
         // Load embedded template registry
-        let registry = self.load_template_registry()?;
+        let registry = template::load_template_registry()?;
 
         // Look up template
         let template_info = registry.templates.get(&args.template).ok_or_else(|| {
@@ -135,13 +119,6 @@ impl Execute for NewCommand {
 }
 
 impl NewCommand {
-    fn load_template_registry(&self) -> Result<TemplateRegistry> {
-        // Load embedded templates.toml
-        let templates_toml = include_str!("../../templates.toml");
-        toml::from_str(templates_toml)
-            .map_err(|e| anyhow!("Failed to parse template registry: {}", e))
-    }
-
     fn validate_project_name(&self, name: &str) -> Result<()> {
         if name.is_empty() {
             return Err(anyhow!("Project name cannot be empty"));
@@ -224,7 +201,7 @@ subfolder = "test-template"
 frameworks = ["test"]
 "#;
 
-        let registry: TemplateRegistry = toml::from_str(toml_content).unwrap();
+        let registry: template::TemplateRegistry = toml::from_str(toml_content).unwrap();
         assert!(registry.templates.contains_key("test-template"));
 
         let template = &registry.templates["test-template"];

@@ -1,6 +1,7 @@
 mod args;
 pub mod cmd;
 pub mod output;
+pub mod template;
 mod utils;
 
 use crate::cmd::{config::ConfigArgs, list::ListArgs, new::NewArgs, update::UpdateArgs};
