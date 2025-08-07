@@ -1,5 +1,5 @@
 [workspace]
-release_commits = "^(feat|fix|perf|refactor):"
+release_commits = "^(feat|fix|perf|refactor)[:(]"
 
 [[package]]
 name = "cza"
