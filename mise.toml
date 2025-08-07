@@ -10,6 +10,11 @@ run = "cargo build --workspace --all-features --all-targets --release"
 description = "Build and open the docs"
 run = "cargo doc --no-deps --workspace --all-features --open"
 
+[tasks.lint]
+alias = "l"
+description = "Run the clippy linter"
+run = "cargo clippy --all-targets --all-features --workspace"
+
 [tasks.run]
 alias = "r"
 description = "Run the project"
