@@ -41,7 +41,8 @@ pub mod helpers {
 [templates.test-template]
 name = "Test Template"
 description = "A template for testing"
-repository = "https://github.com/test/test-template"
+repository = "https://github.com/test/test-templates"
+subfolder = "test-template"
 frameworks = ["test"]
 "#
         .to_string()

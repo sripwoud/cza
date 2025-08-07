@@ -4,7 +4,8 @@
 [templates.noir-vite]
 name = "Noir + Vite + TanStack"
 description = "Zero-knowledge app with Noir and modern frontend stack (Vite + TanStack Router/Query/State/Form)"
-repository = "https://github.com/sripwoud/cza-noir-vite"
+repository = "https://github.com/sripwoud/cza-templates"
+subfolder = "noir-vite"
 frameworks = ["noir", "vite", "tanstack", "react", "typescript"]
 
 # [templates.cairo-vite]

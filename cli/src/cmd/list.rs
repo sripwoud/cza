@@ -22,6 +22,7 @@ struct TemplateInfo {
     name: String,
     description: String,
     repository: String,
+    subfolder: String,
     frameworks: Vec<String>,
 }
 
@@ -47,12 +48,21 @@ impl Execute for ListCommand {
 
         for (template_key, template_info) in templates {
             if args.detailed {
+                // Build full URL to template subfolder
+                let template_url = if template_info.repository.contains("github.com") {
+                    format!(
+                        "{}/tree/main/{}",
+                        template_info.repository, template_info.subfolder
+                    )
+                } else {
+                    template_info.repository.clone()
+                };
                 output::template_detailed(
                     template_key,
                     &template_info.name,
                     &template_info.description,
                     &template_info.frameworks,
-                    &template_info.repository,
+                    &template_url,
                 );
             } else {
                 output::template_item(template_key, &template_info.description);
@@ -111,7 +121,7 @@ mod tests {
         let noir_template = &registry.templates["noir-vite"];
         assert!(!noir_template.name.is_empty());
         assert!(!noir_template.description.is_empty());
-        assert!(noir_template.repository.starts_with("https://"));
+        assert!(!noir_template.repository.is_empty());
         assert!(!noir_template.frameworks.is_empty());
     }
 
@@ -121,6 +131,7 @@ mod tests {
             name: "Test Template".to_string(),
             description: "A test template".to_string(),
             repository: "https://github.com/test/test".to_string(),
+            subfolder: "test-template".to_string(),
             frameworks: vec!["test".to_string(), "framework".to_string()],
         };
 
@@ -140,6 +151,6 @@ mod tests {
         template_keys.sort();
 
         // Should be sortable without panic
-        assert!(template_keys.len() > 0);
+        assert!(!template_keys.is_empty());
     }
 }

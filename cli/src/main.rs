@@ -10,9 +10,9 @@ fn main() {
     let cli = Cli::parse();
 
     match &cli.command {
-        Command::New(args) => NewCommand.execute(&args),
-        Command::List(args) => ListCommand.execute(&args),
-        Command::Config(args) => ConfigCommand.execute(&args),
-        Command::Update(args) => UpdateCommand.execute(&args),
+        Command::New(args) => NewCommand.execute(args),
+        Command::List(args) => ListCommand.execute(args),
+        Command::Config(args) => ConfigCommand.execute(args),
+        Command::Update(args) => UpdateCommand.execute(args),
     }
 }

@@ -20,11 +20,11 @@ impl Execute for ConfigCommand {
 
     fn run(&self, args: &Self::Args) -> Result<()> {
         if let Some(ref value) = args.set {
-            println!("Setting configuration value: {}", value);
+            println!("Setting configuration value: {value}");
             // Implement the logic to set a configuration value
         }
         if let Some(ref value) = args.get {
-            println!("Getting configuration value: {}", value);
+            println!("Getting configuration value: {value}");
             // Implement the logic to get a configuration value
         }
         Ok(())
