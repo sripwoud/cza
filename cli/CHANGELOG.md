@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0-alpha.3](https://github.com/sripwoud/cza/compare/v0.1.0-alpha.2...v0.1.0-alpha.3) - 2025-08-07
+
+### Other
+
+- define template module ([#8](https://github.com/sripwoud/cza/pull/8))
+- add badges to README
+- *(templates)* use templates monorepo with subfolders ([#7](https://github.com/sripwoud/cza/pull/7))
+- add templates section
+
 ## [0.1.0-alpha.2](https://github.com/sripwoud/cza/compare/v0.1.0-alpha.1...v0.1.0-alpha.2) - 2025-08-06
 
 ### Fixed
