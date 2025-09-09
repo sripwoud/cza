@@ -11,7 +11,7 @@ jobs:
   changed-files:
     runs-on: ubuntu-latest
     outputs:
-      any_rs_changed: ${{ steps.changed-files.outputs.any_changed }}
+      any_changed: ${{ steps.changed-files.outputs.any_changed }}
     steps:
       - uses: actions/checkout@v4
       - uses: tj-actions/changed-files@v44
@@ -20,6 +20,7 @@ jobs:
           files: |
             **/*.rs
             **/Cargo.toml
+            **/cli/templates.toml
             Cargo.lock
 
   check:
@@ -49,7 +50,7 @@ jobs:
 
   _test:
     needs: changed-files
-    if: needs.changed-files.outputs.any_rs_changed == 'true'
+    if: needs.changed-files.outputs.any_changed == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -81,7 +82,7 @@ jobs:
       always() && !cancelled() && !failure() &&
       github.ref == 'refs/heads/main' &&
       (
-        (github.event_name != 'workflow_dispatch' && needs.changed-files.outputs.any_rs_changed == 'true') ||
+        (github.event_name != 'workflow_dispatch' && needs.changed-files.outputs.any_changed == 'true') ||
         (github.event_name == 'workflow_dispatch')
       )
     runs-on: ubuntu-latest

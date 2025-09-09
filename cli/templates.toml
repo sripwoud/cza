@@ -8,8 +8,9 @@ repository = "https://github.com/sripwoud/cza-templates"
 subfolder = "noir-vite"
 frameworks = ["noir", "vite", "tanstack", "react", "typescript"]
 
-# [templates.cairo-vite]
-# name = "Cairo + Vite + TanStack"
-# description = "StarkNet app with Cairo and modern frontend stack (Vite + TanStack Router/Query/State/Form)"
-# repository = "https://github.com/sripwoud/cza-template-cairo-vite"
-# frameworks = ["cairo", "starknet", "vite", "tanstack", "react", "typescript"]
+[templates.cairo-vite]
+name = "Cairo + Vite + TanStack"
+description = "StarkNet app with Cairo and modern frontend stack (Vite + TanStack Router/Query/State/Form)"
+repository = "https://github.com/sripwoud/cza-templates"
+subfolder = "cairo-vite"
+frameworks = ["cairo", "starknet", "vite", "tanstack", "react", "typescript"]
