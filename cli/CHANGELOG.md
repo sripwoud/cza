@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0-alpha.4](https://github.com/sripwoud/cza/compare/v0.1.0-alpha.3...v0.1.0-alpha.4) - 2025-09-09
+
+### Added
+
+- add cairo-vite template
+
+### Other
+
+- improve coverage
+
 ## [0.1.0-alpha.3](https://github.com/sripwoud/cza/compare/v0.1.0-alpha.2...v0.1.0-alpha.3) - 2025-08-07
 
 ### Other
