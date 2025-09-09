@@ -50,9 +50,10 @@ mise run dev
 
 Templates are hosted at [cza-templates](https://github.com/sripwoud/cza-templates).
 
-| Template    | Description                                        | ZK Framework                   | Frontend                                                                                      |
-| ----------- | -------------------------------------------------- | ------------------------------ | --------------------------------------------------------------------------------------------- |
-| `noir-vite` | Zero-knowledge circuits with modern frontend stack | [Noir](https://noir-lang.org/) | [Vite](https://vitejs.dev/) + [React](https://react.dev/) + [TanStack](https://tanstack.com/) |
+| Template     | Description                                                                       | ZK Framework                        | Frontend                                                                                      |
+| ------------ | --------------------------------------------------------------------------------- | ----------------------------------- | --------------------------------------------------------------------------------------------- |
+| `cairo-vite` | Cairo Program running in the browser (wasm web worker) with modern frontend stack | [Cairo](https://www.cairo-lang.org) | [Vite](https://vitejs.dev/) + [React](https://react.dev/) + [TanStack](https://tanstack.com/) |
+| `noir-vite`  | Noir Program running in the browser (wasm web worker) with modern frontend stack  | [Noir](https://noir-lang.org/)      | [Vite](https://vitejs.dev/) + [React](https://react.dev/) + [TanStack](https://tanstack.com/) |
 
 More templates coming soon: Cairo, Risc0, o1js, and more!
 
