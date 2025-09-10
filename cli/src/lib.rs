@@ -1,5 +1,6 @@
 mod args;
 pub mod cmd;
+pub mod config;
 pub mod output;
 pub mod template;
 mod utils;

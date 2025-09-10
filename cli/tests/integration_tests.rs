@@ -79,24 +79,35 @@ fn test_config_command_help() {
 
 #[test]
 fn test_config_set_command() {
+    let temp_dir = TempDir::new().unwrap();
+    std::env::set_var("XDG_CONFIG_HOME", temp_dir.path());
+
     let mut cmd = Command::cargo_bin("cza").unwrap();
-    cmd.args(["config", "--set", "test=value"])
+    cmd.env("XDG_CONFIG_HOME", temp_dir.path())
+        .args(["config", "set", "user.author", "Test Author"])
         .assert()
         .success()
-        .stdout(predicate::str::contains(
-            "Setting configuration value: test=value",
-        ));
+        .stdout(predicate::str::contains("Set user.author = Test Author"));
 }
 
 #[test]
 fn test_config_get_command() {
+    let temp_dir = TempDir::new().unwrap();
+
+    // First set a value
     let mut cmd = Command::cargo_bin("cza").unwrap();
-    cmd.args(["config", "--get", "test"])
+    cmd.env("XDG_CONFIG_HOME", temp_dir.path())
+        .args(["config", "set", "user.author", "Test Author"])
+        .assert()
+        .success();
+
+    // Then get it
+    let mut cmd = Command::cargo_bin("cza").unwrap();
+    cmd.env("XDG_CONFIG_HOME", temp_dir.path())
+        .args(["config", "get", "user.author"])
         .assert()
         .success()
-        .stdout(predicate::str::contains(
-            "Getting configuration value: test",
-        ));
+        .stdout(predicate::str::contains("user.author = Test Author"));
 }
 
 #[test]

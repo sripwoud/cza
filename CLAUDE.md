@@ -1,0 +1,1 @@
+../membank/CLAUDE.md
