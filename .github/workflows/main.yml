@@ -27,6 +27,8 @@ jobs:
             Cargo.lock
 
   check:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -69,6 +71,7 @@ jobs:
       - uses: coverallsapp/github-action@v2
 
   test:
+    permissions: {}
     needs: _test
     # workaround for https://github.com/orgs/community/discussions/13690
     # https://stackoverflow.com/a/77066140/9771158
