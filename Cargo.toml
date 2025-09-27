@@ -13,6 +13,7 @@ dirs = "6.0"
 env_logger = "0.11"
 log = "0.4"
 predicates = "3.0"
+self_update = "0.41"
 serde = { version = "1.0", features = ["derive"] }
 snapbox = "0.6"
 tempfile = "3.8"

@@ -25,6 +25,7 @@ console.workspace = true
 dirs.workspace = true
 env_logger.workspace = true
 log.workspace = true
+self_update.workspace = true
 serde.workspace = true
 toml.workspace = true
 

@@ -116,7 +116,7 @@ fn test_update_command() {
     cmd.arg("update")
         .assert()
         .success()
-        .stdout(predicate::str::contains("Updating the CLI tool"));
+        .stdout(predicate::str::contains("Checking for updates"));
 }
 
 #[test]
