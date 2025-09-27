@@ -113,4 +113,18 @@ Templates come pre-configured with:
 | State                                  | [jotai](https://jotai.org/)                                                                   | Atomic state management for React            |
 | Typings                                | [typescript](https://www.typescriptlang.org/)                                                 | Static type checking for JavaScript          |
 
+## [Configuration](docs/configuration.md)
+
+**cza** provides a comprehensive configuration system for customizing your development experience. You can set global preferences for project generation, control CLI behavior, and configure post-generation automation.
+
+Key configuration areas:
+
+- **User preferences** - Default author, email, git initialization, and template selection
+- **Development settings** - Verbose logging, colored output, and confirmation prompts
+- **Post-generation behavior** - Automatic dependency installation, git hook setup, and editor opening
+
+Configuration is stored in `~/.config/cza/config.toml` and can be managed via `cza config` commands.
+
+See the [Configuration documentation](docs/configuration.md) for complete setup instructions and examples.
+
 ## [Contributing](.github/CONTRIBUTING.md)
