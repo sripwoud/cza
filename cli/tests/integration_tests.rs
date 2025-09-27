@@ -43,7 +43,7 @@ fn test_invalid_template() {
     let temp_dir = TempDir::new().unwrap();
     let mut cmd = Command::cargo_bin("cza").unwrap();
     cmd.current_dir(&temp_dir)
-        .args(["new", "nonexistent-template", "test-project"])
+        .args(["new", "test-project", "--template", "nonexistent-template"])
         .assert()
         .failure()
         .stderr(predicate::str::contains("not found"));
@@ -54,7 +54,7 @@ fn test_invalid_project_name() {
     let temp_dir = TempDir::new().unwrap();
     let mut cmd = Command::cargo_bin("cza").unwrap();
     cmd.current_dir(&temp_dir)
-        .args(["new", "noir-vite", "invalid name"])
+        .args(["new", "invalid name", "--template", "noir-vite"])
         .assert()
         .failure();
 }

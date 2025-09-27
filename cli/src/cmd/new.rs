@@ -7,11 +7,12 @@ use log::{debug, info, warn};
 
 #[derive(Args, Debug)]
 pub struct NewArgs {
-    /// The template to use (e.g., noir-vite, cairo-vite). If not provided, uses default_template from config
-    template: Option<String>,
-
     /// The name of the new project
     project_name: String,
+
+    /// The template to use (e.g., noir-vite, cairo-vite). If not provided, uses default_template from config
+    #[arg(short, long)]
+    template: Option<String>,
 
     /// Author name (optional, falls back to config then git config)
     #[arg(long)]
@@ -430,8 +431,8 @@ frameworks = ["test"]
     fn test_new_command_invalid_template() {
         let cmd = NewCommand;
         let args = NewArgs {
-            template: Some("nonexistent-template".to_string()),
             project_name: "test-project".to_string(),
+            template: Some("nonexistent-template".to_string()),
             author: None,
         };
 
@@ -444,8 +445,8 @@ frameworks = ["test"]
     fn test_new_command_invalid_project_name() {
         let cmd = NewCommand;
         let args = NewArgs {
-            template: Some("noir-vite".to_string()),
             project_name: "invalid name".to_string(),
+            template: Some("noir-vite".to_string()),
             author: None,
         };
 
@@ -457,8 +458,8 @@ frameworks = ["test"]
     fn test_new_command_with_author() {
         let cmd = NewCommand;
         let args = NewArgs {
-            template: Some("nonexistent-template".to_string()),
             project_name: "test-project".to_string(),
+            template: Some("nonexistent-template".to_string()),
             author: Some("Test Author".to_string()),
         };
 
@@ -517,8 +518,8 @@ frameworks = ["test"]
         let author = Some("Test Author".to_string());
 
         let args = NewArgs {
-            template: template.clone(),
             project_name: name.clone(),
+            template: template.clone(),
             author: author.clone(),
         };
 
@@ -531,8 +532,8 @@ frameworks = ["test"]
     fn test_default_template_config_integration() {
         // Test that NewArgs can use None for template to rely on config
         let args = NewArgs {
-            template: None,
             project_name: "test-project".to_string(),
+            template: None,
             author: None,
         };
 
@@ -565,8 +566,8 @@ frameworks = ["test"]
         // Test that CLI arg author takes precedence over config
         let cmd = NewCommand;
         let args = NewArgs {
-            template: Some("nonexistent-template".to_string()),
             project_name: "test-project".to_string(),
+            template: Some("nonexistent-template".to_string()),
             author: Some("CLI Author".to_string()),
         };
 
