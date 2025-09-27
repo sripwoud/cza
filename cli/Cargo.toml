@@ -1,6 +1,6 @@
 [package]
 name = "cza"
-version = "1.0.1"
+version = "2.0.0"
 authors = ["sripwoud"]
 categories = ["command-line-utilities", "development-tools"]
 edition.workspace = true

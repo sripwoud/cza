@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0](https://github.com/sripwoud/cza/compare/v1.0.1...v2.0.0) - 2025-09-27
+
+### Added
+
+- *(update)* implement self-updating CLI capability ([#24](https://github.com/sripwoud/cza/pull/24))
+- *(output)* integrate development.color config setting ([#21](https://github.com/sripwoud/cza/pull/21))
+- *(new)* [**breaking**] integrate config settings into new command ([#20](https://github.com/sripwoud/cza/pull/20))
+
+### Fixed
+
+- *(cli)* restructure NewArgs to resolve clap validation error ([#22](https://github.com/sripwoud/cza/pull/22))
+
+### Other
+
+- update README
+
 ## [0.1.0-alpha.5](https://github.com/sripwoud/cza/compare/v0.1.0-alpha.4...v0.1.0-alpha.5) - 2025-09-10
 
 ### Added
