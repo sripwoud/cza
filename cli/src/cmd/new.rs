@@ -3,8 +3,9 @@ use crate::{output, template};
 use anyhow::{anyhow, Result};
 use cargo_generate::{generate, GenerateArgs, TemplatePath};
 use clap::Args;
+use log::{debug, info, warn};
 
-#[derive(Args)]
+#[derive(Args, Debug)]
 pub struct NewArgs {
     /// The template to use (e.g., noir-vite, cairo-vite)
     template: String,
@@ -23,15 +24,22 @@ impl Execute for NewCommand {
     type Args = NewArgs;
 
     fn run(&self, args: &Self::Args) -> Result<()> {
+        debug!(
+            "Starting new command with template: {}, project: {}",
+            args.template, args.project_name
+        );
+
         output::step(&format!(
             "Creating new {} project: {}",
             args.template, args.project_name
         ));
 
         // Load embedded template registry
+        debug!("Loading embedded template registry");
         let registry = template::load_template_registry()?;
 
         // Look up template
+        debug!("Looking up template: {}", args.template);
         let template_info = registry.templates.get(&args.template).ok_or_else(|| {
             anyhow!(
                 "Template '{}' not found. Use 'cza list' to see available templates.",
@@ -39,18 +47,31 @@ impl Execute for NewCommand {
             )
         })?;
 
+        debug!(
+            "Found template: {} - {}",
+            template_info.name, template_info.description
+        );
         output::info(&format!("Using template: {}", template_info.name));
         output::info(&format!("Description: {}", template_info.description));
 
         // Validate project name
+        debug!("Validating project name: {}", args.project_name);
         self.validate_project_name(&args.project_name)?;
 
         // Set author from arg or try to get from git config
+        debug!("Resolving author information");
         let author = args
             .author
             .clone()
-            .or_else(|| self.get_git_author())
-            .unwrap_or_else(|| "Developer".to_string());
+            .or_else(|| {
+                debug!("No author provided, trying git config");
+                self.get_git_author()
+            })
+            .unwrap_or_else(|| {
+                debug!("No author found in git config, using fallback");
+                "Developer".to_string()
+            });
+        debug!("Using author: {}", author);
 
         // Create template path with git repository and subfolder
         let template_path = TemplatePath {
@@ -74,37 +95,49 @@ impl Execute for NewCommand {
         };
 
         // Generate project using cargo-generate
+        debug!(
+            "Calling cargo-generate with repository: {}",
+            template_info.repository
+        );
         output::step("Generating project from template...");
         match generate(generate_args) {
             Ok(output_dir) => {
+                info!("Project created successfully at: {}", output_dir.display());
                 output::success("Project created successfully!");
                 output::directory(&output_dir.display().to_string());
 
                 // Run setup script if it exists
                 let setup_script = output_dir.join("setup");
+                debug!("Checking for setup script at: {}", setup_script.display());
                 if setup_script.exists() {
+                    debug!("Setup script found, executing");
                     output::step("Running project setup...");
 
                     let status = std::process::Command::new("sh")
-                        .arg(setup_script)
+                        .arg(&setup_script)
                         .current_dir(&output_dir)
                         .status();
 
                     match status {
                         Ok(exit_status) if exit_status.success() => {
+                            debug!("Setup script completed successfully");
                             output::success("Setup completed successfully!");
                         }
                         Ok(exit_status) => {
+                            warn!("Setup script exited with status: {}", exit_status);
                             output::warning(&format!(
                                 "Setup script exited with status: {exit_status}"
                             ));
                             output::info("You can run './setup' manually to complete the setup");
                         }
                         Err(e) => {
+                            warn!("Could not run setup script: {}", e);
                             output::warning(&format!("Could not run setup script: {e}"));
                             output::info("Please run './setup' manually to complete the setup");
                         }
                     }
+                } else {
+                    debug!("No setup script found");
                 }
 
                 output::next_steps(&[&format!("cd {}", args.project_name), "mise run dev"]);
