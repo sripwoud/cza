@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0-alpha.6](https://github.com/sripwoud/cza/compare/v0.1.0-alpha.5...v0.1.0-alpha.6) - 2025-09-27
+
+### Added
+
+- add structured verbose logging with config integration ([#14](https://github.com/sripwoud/cza/pull/14))
+
 ## [0.1.0-alpha.5](https://github.com/sripwoud/cza/compare/v0.1.0-alpha.4...v0.1.0-alpha.5) - 2025-09-10
 
 ### Added
