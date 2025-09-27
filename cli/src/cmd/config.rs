@@ -3,14 +3,15 @@ use crate::config::Config;
 use crate::output;
 use anyhow::{Context, Result};
 use clap::{Args, Subcommand};
+use log::debug;
 
-#[derive(Args)]
+#[derive(Args, Debug)]
 pub struct ConfigArgs {
     #[command(subcommand)]
     pub command: Option<ConfigSubcommand>,
 }
 
-#[derive(Subcommand)]
+#[derive(Subcommand, Debug)]
 pub enum ConfigSubcommand {
     /// Set a configuration value
     Set {
@@ -38,8 +39,11 @@ impl Execute for ConfigCommand {
     type Args = ConfigArgs;
 
     fn run(&self, args: &Self::Args) -> Result<()> {
+        debug!("Starting config command: {:#?}", args.command);
+
         match &args.command {
             Some(ConfigSubcommand::Set { key, value }) => {
+                debug!("Setting config key: {} = {}", key, value);
                 let mut config = Config::load()?;
                 config
                     .set(key, value)
