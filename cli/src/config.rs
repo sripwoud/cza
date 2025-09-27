@@ -191,7 +191,11 @@ impl Config {
 mod tests {
     use super::*;
     use std::env;
+    use std::sync::Mutex;
     use tempfile::TempDir;
+
+    // Mutex to serialize config tests to avoid environment variable conflicts
+    static CONFIG_TEST_MUTEX: Mutex<()> = Mutex::new(());
 
     #[test]
     fn test_default_config() {
@@ -253,10 +257,12 @@ mod tests {
 
     #[test]
     fn test_save_and_load_config() {
+        let _lock = CONFIG_TEST_MUTEX.lock().unwrap();
         let temp_dir = TempDir::new().unwrap();
         let config_path = temp_dir.path().join("cza").join("config.toml");
 
-        // Override config path for testing
+        // For this test, we need to manually set the standard var temporarily
+        let original_config_home = env::var("XDG_CONFIG_HOME").ok();
         env::set_var("XDG_CONFIG_HOME", temp_dir.path());
 
         let mut config = Config::default();
@@ -269,6 +275,12 @@ mod tests {
         let loaded = Config::load().unwrap();
         assert_eq!(loaded.user.author, Some("Test Author".to_string()));
         assert_eq!(loaded.user.email, Some("test@example.com".to_string()));
+
+        // Restore original environment
+        match original_config_home {
+            Some(original) => env::set_var("XDG_CONFIG_HOME", original),
+            None => env::remove_var("XDG_CONFIG_HOME"),
+        }
     }
 
     #[test]

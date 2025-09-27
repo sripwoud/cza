@@ -92,10 +92,15 @@ impl Execute for ConfigCommand {
 mod tests {
     use super::*;
     use std::env;
+    use std::sync::Mutex;
     use tempfile::TempDir;
+
+    // Mutex to serialize config tests to avoid environment variable conflicts
+    static CONFIG_TEST_MUTEX: Mutex<()> = Mutex::new(());
 
     #[test]
     fn test_config_set() {
+        let _lock = CONFIG_TEST_MUTEX.lock().unwrap();
         let temp_dir = TempDir::new().unwrap();
         env::set_var("XDG_CONFIG_HOME", temp_dir.path());
 
@@ -113,6 +118,7 @@ mod tests {
 
     #[test]
     fn test_config_get() {
+        let _lock = CONFIG_TEST_MUTEX.lock().unwrap();
         let temp_dir = TempDir::new().unwrap();
         env::set_var("XDG_CONFIG_HOME", temp_dir.path());
 
@@ -140,6 +146,7 @@ mod tests {
 
     #[test]
     fn test_config_list() {
+        let _lock = CONFIG_TEST_MUTEX.lock().unwrap();
         let temp_dir = TempDir::new().unwrap();
         env::set_var("XDG_CONFIG_HOME", temp_dir.path());
 
@@ -154,6 +161,7 @@ mod tests {
 
     #[test]
     fn test_config_reset() {
+        let _lock = CONFIG_TEST_MUTEX.lock().unwrap();
         let temp_dir = TempDir::new().unwrap();
         env::set_var("XDG_CONFIG_HOME", temp_dir.path());
 
@@ -168,6 +176,7 @@ mod tests {
 
     #[test]
     fn test_config_path() {
+        let _lock = CONFIG_TEST_MUTEX.lock().unwrap();
         let temp_dir = TempDir::new().unwrap();
         env::set_var("XDG_CONFIG_HOME", temp_dir.path());
 
@@ -182,6 +191,7 @@ mod tests {
 
     #[test]
     fn test_config_no_subcommand() {
+        let _lock = CONFIG_TEST_MUTEX.lock().unwrap();
         let temp_dir = TempDir::new().unwrap();
         env::set_var("XDG_CONFIG_HOME", temp_dir.path());
 
