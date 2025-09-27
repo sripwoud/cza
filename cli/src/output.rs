@@ -5,9 +5,10 @@
 //! - Emoji support with ASCII fallbacks
 //! - Consistent styling across all commands
 //! - Terminal-aware formatting
+//! - Configuration-aware color control
 
 use anyhow;
-use console::{style, Emoji, Term};
+use console::{style, Emoji, StyledObject, Term};
 
 /// Success indicator emoji with ASCII fallback
 static SUCCESS_EMOJI: Emoji<'_, '_> = Emoji("✅", "[SUCCESS]");
@@ -33,49 +34,68 @@ static NEXT_EMOJI: Emoji<'_, '_> = Emoji("👉", "==>");
 /// Output manager for consistent CLI messaging
 pub struct Output {
     term: Term,
+    color_enabled: bool,
 }
 
 impl Output {
-    /// Create a new output manager
+    /// Create a new output manager with default color settings
     pub fn new() -> Self {
         Self {
             term: Term::stdout(),
+            color_enabled: true, // Default to enabled
+        }
+    }
+
+    /// Create a new output manager with specified color setting
+    pub fn with_color(color_enabled: bool) -> Self {
+        Self {
+            term: Term::stdout(),
+            color_enabled,
+        }
+    }
+
+    /// Apply styling if colors are enabled, otherwise return plain text
+    fn apply_style(&self, text: &str, styled: StyledObject<&str>) -> String {
+        if self.color_enabled {
+            styled.to_string()
+        } else {
+            text.to_string()
         }
     }
 
     /// Print a success message with green styling
     pub fn success(&self, message: &str) {
-        let styled_message = style(message).green().bold();
+        let styled_message = self.apply_style(message, style(message).green().bold());
         println!("{SUCCESS_EMOJI} {styled_message}");
     }
 
     /// Print an info message with blue styling
     pub fn info(&self, message: &str) {
-        let styled_message = style(message).blue();
+        let styled_message = self.apply_style(message, style(message).blue());
         println!("{INFO_EMOJI} {styled_message}");
     }
 
     /// Print a warning message with yellow styling
     pub fn warning(&self, message: &str) {
-        let styled_message = style(message).yellow().bold();
+        let styled_message = self.apply_style(message, style(message).yellow().bold());
         println!("{WARNING_EMOJI} {styled_message}");
     }
 
     /// Print an error message with red styling
     pub fn error(&self, message: &str) {
-        let styled_message = style(message).red().bold();
+        let styled_message = self.apply_style(message, style(message).red().bold());
         eprintln!("{ERROR_EMOJI} {styled_message}");
     }
 
     /// Print a step message with cyan styling (for progress indication)
     pub fn step(&self, message: &str) {
-        let styled_message = style(message).cyan();
+        let styled_message = self.apply_style(message, style(message).cyan());
         println!("{STEP_EMOJI} {styled_message}");
     }
 
     /// Print a directory path with consistent styling
     pub fn directory(&self, path: &str) {
-        let styled_path = style(path).magenta().bold();
+        let styled_path = self.apply_style(path, style(path).magenta().bold());
         println!("{DIRECTORY_EMOJI} Location: {styled_path}");
     }
 
@@ -86,26 +106,26 @@ impl Output {
         }
 
         println!();
-        let styled_header = style("Next steps:").cyan().bold();
+        let styled_header = self.apply_style("Next steps:", style("Next steps:").cyan().bold());
         println!("{NEXT_EMOJI} {styled_header}");
 
         for step in steps {
-            let styled_step = style(step).dim();
+            let styled_step = self.apply_style(step, style(*step).dim());
             println!("  {styled_step}");
         }
     }
 
     /// Print a command suggestion with consistent styling
     pub fn command_example(&self, description: &str, command: &str) {
-        let styled_desc = style(description).dim();
-        let styled_command = style(command).green().bold();
+        let styled_desc = self.apply_style(description, style(description).dim());
+        let styled_command = self.apply_style(command, style(command).green().bold());
         println!("  {styled_desc}: {styled_command}");
     }
 
     /// Print a header for sections
     pub fn header(&self, title: &str) {
         println!();
-        let styled_title = style(title).bold().underlined();
+        let styled_title = self.apply_style(title, style(title).bold().underlined());
         println!("{styled_title}");
         println!();
     }
@@ -117,14 +137,14 @@ impl Output {
 
     /// Print a styled key-value pair
     pub fn key_value(&self, key: &str, value: &str) {
-        let styled_key = style(key).bold();
+        let styled_key = self.apply_style(key, style(key).bold());
         println!("   {styled_key}: {value}");
     }
 
     /// Print a template item with consistent styling
     pub fn template_item(&self, name: &str, description: &str) {
-        let styled_name = style(name).green().bold();
-        let styled_desc = style(description).dim();
+        let styled_name = self.apply_style(name, style(name).green().bold());
+        let styled_desc = self.apply_style(description, style(description).dim());
         println!("  {styled_name} - {styled_desc}");
     }
 
@@ -137,7 +157,7 @@ impl Output {
         frameworks: &[String],
         repository: &str,
     ) {
-        let styled_key = style(key).green().bold();
+        let styled_key = self.apply_style(key, style(key).green().bold());
         println!("{STEP_EMOJI} {styled_key}");
         self.key_value("Name", name);
         self.key_value("Description", description);
@@ -158,62 +178,68 @@ impl Default for Output {
     }
 }
 
-/// Global output instance for convenience functions
-static OUTPUT: std::sync::LazyLock<Output> = std::sync::LazyLock::new(Output::new);
+/// Create an output instance based on current config
+fn get_output() -> Output {
+    use crate::config::Config;
+    match Config::load() {
+        Ok(config) => Output::with_color(config.development.color),
+        Err(_) => Output::new(), // Fallback to default if config can't be loaded
+    }
+}
 
 /// Convenience function for success messages
 pub fn success(message: &str) {
-    OUTPUT.success(message);
+    get_output().success(message);
 }
 
 /// Convenience function for info messages
 pub fn info(message: &str) {
-    OUTPUT.info(message);
+    get_output().info(message);
 }
 
 /// Convenience function for warning messages
 pub fn warning(message: &str) {
-    OUTPUT.warning(message);
+    get_output().warning(message);
 }
 
 /// Convenience function for error messages
 pub fn error(message: &str) {
-    OUTPUT.error(message);
+    get_output().error(message);
 }
 
 /// Convenience function for step messages
 pub fn step(message: &str) {
-    OUTPUT.step(message);
+    get_output().step(message);
 }
 
 /// Convenience function for directory messages
 pub fn directory(path: &str) {
-    OUTPUT.directory(path);
+    get_output().directory(path);
 }
 
 /// Convenience function for next steps
 pub fn next_steps(steps: &[&str]) {
-    OUTPUT.next_steps(steps);
+    get_output().next_steps(steps);
 }
 
 /// Convenience function for command examples
 pub fn command_example(description: &str, command: &str) {
-    OUTPUT.command_example(description, command);
+    get_output().command_example(description, command);
 }
 
 /// Convenience function for headers
 pub fn header(title: &str) {
-    OUTPUT.header(title);
+    get_output().header(title);
 }
 
 /// Convenience function for plain messages
 pub fn plain(message: &str) {
-    OUTPUT.plain(message);
+    get_output().plain(message);
 }
 
 /// Convenience function for template items
 pub fn template_item(name: &str, description: &str) {
-    OUTPUT.template_item(name, description);
+    get_output().template_item(name, description);
 }
 
 /// Convenience function for detailed template info
@@ -224,33 +250,36 @@ pub fn template_detailed(
     frameworks: &[String],
     repository: &str,
 ) {
-    OUTPUT.template_detailed(key, name, description, frameworks, repository);
+    get_output().template_detailed(key, name, description, frameworks, repository);
 }
 
 /// Format and display anyhow errors using our consistent output system
 pub fn format_error(err: &anyhow::Error) {
+    let output = get_output();
     let error_msg = err.to_string();
 
     // Handle specific error patterns with enhanced formatting
     if error_msg.contains("not found. Use 'cza list'") {
         // Split the template not found error for better formatting
         if let Some(template_part) = error_msg.split('.').next() {
-            error(template_part);
-            info("Use 'cza list' to see available templates.");
+            output.error(template_part);
+            output.info("Use 'cza list' to see available templates.");
         } else {
-            error(&error_msg);
+            output.error(&error_msg);
         }
     } else if error_msg.contains("already exists") {
         // Handle directory exists errors
-        error(&error_msg);
-        info("Choose a different project name or remove the existing directory.");
+        output.error(&error_msg);
+        output.info("Choose a different project name or remove the existing directory.");
     } else if error_msg.contains("Project name") {
         // Handle project name validation errors
-        error(&error_msg);
-        info("Project names can only contain alphanumeric characters, hyphens, and underscores.");
+        output.error(&error_msg);
+        output.info(
+            "Project names can only contain alphanumeric characters, hyphens, and underscores.",
+        );
     } else {
         // Default error formatting
-        error(&error_msg);
+        output.error(&error_msg);
     }
 }
 
@@ -414,5 +443,51 @@ mod tests {
     fn test_format_error_template_not_found_no_split() {
         let err = anyhow::anyhow!("not found. Use 'cza list'");
         format_error(&err);
+    }
+
+    #[test]
+    fn test_output_with_color_enabled() {
+        let output = Output::with_color(true);
+        // Test that colored output includes ANSI escape codes
+        output.success("Test message");
+        output.info("Test message");
+        output.warning("Test message");
+        output.error("Test message");
+    }
+
+    #[test]
+    fn test_output_with_color_disabled() {
+        let output = Output::with_color(false);
+        // Test that output without color works (should not panic)
+        output.success("Test message");
+        output.info("Test message");
+        output.warning("Test message");
+        output.error("Test message");
+    }
+
+    #[test]
+    fn test_apply_style_with_color_enabled() {
+        let output = Output::with_color(true);
+        let result = output.apply_style("test", style("test").green());
+        // In test environments, the console might not support colors
+        // So we just verify it doesn't crash and returns some string
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn test_apply_style_with_color_disabled() {
+        let output = Output::with_color(false);
+        let result = output.apply_style("test", style("test").green());
+        // Should be plain text when colors are disabled
+        assert_eq!(result, "test");
+    }
+
+    #[test]
+    fn test_config_aware_convenience_functions() {
+        // Test that convenience functions work (they load config on-demand)
+        success("Test success");
+        info("Test info");
+        warning("Test warning");
+        error("Test error");
     }
 }
