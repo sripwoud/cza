@@ -9,7 +9,7 @@ use crate::cmd::{config::ConfigArgs, list::ListArgs, new::NewArgs, update::Updat
 use clap::{Parser, Subcommand};
 
 /// CLI tool to create zero-knowledge applications
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(
     name = "create-zk-app",
     version = "1.0",
@@ -21,7 +21,7 @@ pub struct Cli {
     pub command: Command,
 }
 
-#[derive(Subcommand)]
+#[derive(Subcommand, Debug)]
 pub enum Command {
     /// Create a new ZK application project
     New(NewArgs),

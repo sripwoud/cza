@@ -2,8 +2,9 @@ use super::Execute;
 use crate::{output, template};
 use anyhow::Result;
 use clap::Args;
+use log::{debug, warn};
 
-#[derive(Args)]
+#[derive(Args, Debug)]
 pub struct ListArgs {
     /// Show detailed information about templates
     #[arg(long)]
@@ -16,10 +17,15 @@ impl Execute for ListCommand {
     type Args = ListArgs;
 
     fn run(&self, args: &Self::Args) -> Result<()> {
+        debug!("Starting list command with detailed: {}", args.detailed);
+
         // Load embedded template registry
+        debug!("Loading embedded template registry");
         let registry = template::load_template_registry()?;
+        debug!("Found {} templates", registry.templates.len());
 
         if registry.templates.is_empty() {
+            warn!("No templates available in registry");
             output::warning("No templates available.");
             return Ok(());
         }
