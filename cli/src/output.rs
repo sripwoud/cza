@@ -262,15 +262,13 @@ mod tests {
     #[test]
     fn test_output_new() {
         let _output = Output::new();
-        // Just ensure it creates successfully
-        assert!(true);
+        // Just ensure it creates successfully without panicking
     }
 
     #[test]
     fn test_output_default() {
         let _output = Output::default();
-        // Just ensure it creates successfully
-        assert!(true);
+        // Just ensure it creates successfully without panicking
     }
 
     #[test]
@@ -383,13 +381,7 @@ mod tests {
         header("Test Header");
         plain("Test plain");
         template_item("template", "description");
-        template_detailed(
-            "key",
-            "name",
-            "desc",
-            &vec!["framework".to_string()],
-            "repo",
-        );
+        template_detailed("key", "name", "desc", &["framework".to_string()], "repo");
     }
 
     #[test]
