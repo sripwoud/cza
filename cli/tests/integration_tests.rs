@@ -12,7 +12,7 @@ fn test_version_output() {
     cmd.arg("--version")
         .assert()
         .success()
-        .stdout(predicate::str::starts_with("create-zk-app "));
+        .stdout(predicate::str::starts_with("cza "));
 }
 
 #[test]
@@ -22,7 +22,7 @@ fn test_help_output() {
         .assert()
         .success()
         .stdout(predicate::str::contains(
-            "CLI tool to create zero-knowledge",
+            "CLI tool for scaffolding zero-knowledge application",
         ))
         .stdout(predicate::str::contains("new"))
         .stdout(predicate::str::contains("list"));
