@@ -11,10 +11,10 @@ use clap::{Parser, Subcommand};
 /// CLI tool to create zero-knowledge applications
 #[derive(Parser, Debug)]
 #[command(
-    name = "create-zk-app",
-    version = "1.0",
-    author = "Your Name <your.email@example.com>",
-    about = "CLI tool to create zero-knowledge applications"
+    name = "cza",
+    version,
+    author = "sripwoud",
+    about = "CLI tool for scaffolding zero-knowledge application projects"
 )]
 pub struct Cli {
     #[command(subcommand)]
