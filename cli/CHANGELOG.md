@@ -11,13 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- *(update)* implement self-updating CLI capability ([#24](https://github.com/sripwoud/cza/pull/24))
-- *(output)* integrate development.color config setting ([#21](https://github.com/sripwoud/cza/pull/21))
-- *(new)* [**breaking**] integrate config settings into new command ([#20](https://github.com/sripwoud/cza/pull/20))
+- _(update)_ implement self-updating CLI capability ([#24](https://github.com/sripwoud/cza/pull/24))
+- _(output)_ integrate development.color config setting ([#21](https://github.com/sripwoud/cza/pull/21))
+- _(new)_ [**breaking**] integrate config settings into new command ([#20](https://github.com/sripwoud/cza/pull/20))
 
 ### Fixed
 
-- *(cli)* restructure NewArgs to resolve clap validation error ([#22](https://github.com/sripwoud/cza/pull/22))
+- _(cli)_ restructure NewArgs to resolve clap validation error ([#22](https://github.com/sripwoud/cza/pull/22))
 
 ### Other
 
