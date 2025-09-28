@@ -2,6 +2,7 @@ pub mod cmd;
 pub mod config;
 pub mod output;
 pub mod template;
+pub mod utils;
 
 use crate::cmd::{config::ConfigArgs, list::ListArgs, new::NewArgs, update::UpdateArgs};
 use clap::{Parser, Subcommand};
