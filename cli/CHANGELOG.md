@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0](https://github.com/sripwoud/cza/compare/v2.0.0...v2.1.0) - 2025-09-28
+
+### Added
+
+- add template validation functionality ([#28](https://github.com/sripwoud/cza/pull/28))
+
+### Other
+
+- use shared utilities in new.rs ([#29](https://github.com/sripwoud/cza/pull/29))
+- add utils module with command helpers ([#27](https://github.com/sripwoud/cza/pull/27))
+- update CLI metadata in lib.rs ([#26](https://github.com/sripwoud/cza/pull/26))
+- remove empty args.rs and utils.rs files ([#25](https://github.com/sripwoud/cza/pull/25))
+
 ## [2.0.0](https://github.com/sripwoud/cza/compare/v1.0.1...v2.0.0) - 2025-09-27
 
 ### Added
