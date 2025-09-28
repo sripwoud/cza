@@ -1,5 +1,5 @@
 use super::Execute;
-use crate::{config::Config, output, template};
+use crate::{config::Config, output, template, utils};
 use anyhow::{anyhow, Result};
 use cargo_generate::{generate, GenerateArgs, TemplatePath};
 use clap::Args;
@@ -189,20 +189,7 @@ impl NewCommand {
     }
 
     fn get_git_author(&self) -> Option<String> {
-        std::process::Command::new("git")
-            .args(["config", "user.name"])
-            .output()
-            .ok()
-            .and_then(|output| {
-                if output.status.success() {
-                    String::from_utf8(output.stdout)
-                        .ok()
-                        .map(|s| s.trim().to_string())
-                        .filter(|s| !s.is_empty())
-                } else {
-                    None
-                }
-            })
+        utils::get_git_config("user.name")
     }
 
     fn run_post_generation_setup(
@@ -215,27 +202,14 @@ impl NewCommand {
         // Initialize git if enabled
         if config.user.git_init {
             debug!("git_init is enabled, initializing git repository");
-            output::step("Initializing git repository...");
-
-            let git_status = std::process::Command::new("git")
-                .arg("init")
-                .current_dir(output_dir)
-                .status();
-
-            match git_status {
-                Ok(exit_status) if exit_status.success() => {
-                    debug!("Git repository initialized successfully");
-                    output::success("Git repository initialized!");
-                }
-                Ok(exit_status) => {
-                    warn!("Git init exited with status: {}", exit_status);
-                    output::warning(&format!("Git init failed with status: {exit_status}"));
-                }
-                Err(e) => {
-                    warn!("Could not run git init: {}", e);
-                    output::warning(&format!("Could not initialize git: {e}"));
-                }
-            }
+            let _ = utils::run_post_generation_command(
+                "git",
+                &["init"],
+                output_dir,
+                "Initializing git repository...",
+                "Git repository initialized!",
+                None,
+            );
         } else {
             debug!("git_init is disabled, skipping git initialization");
         }
@@ -243,29 +217,14 @@ impl NewCommand {
         // Install dependencies if enabled
         if config.post_generation.auto_install_deps {
             debug!("auto_install_deps is enabled, running mise install");
-            output::step("Installing dependencies with mise...");
-
-            let mise_status = std::process::Command::new("mise")
-                .arg("install")
-                .current_dir(output_dir)
-                .status();
-
-            match mise_status {
-                Ok(exit_status) if exit_status.success() => {
-                    debug!("Dependencies installed successfully");
-                    output::success("Dependencies installed!");
-                }
-                Ok(exit_status) => {
-                    warn!("mise install exited with status: {}", exit_status);
-                    output::warning(&format!("mise install failed with status: {exit_status}"));
-                    output::info("You can run 'mise install' manually in the project directory");
-                }
-                Err(e) => {
-                    warn!("Could not run mise install: {}", e);
-                    output::warning(&format!("Could not run mise install: {e}"));
-                    output::info("You can run 'mise install' manually in the project directory");
-                }
-            }
+            let _ = utils::run_post_generation_command(
+                "mise",
+                &["install"],
+                output_dir,
+                "Installing dependencies with mise...",
+                "Dependencies installed!",
+                Some("You can run 'mise install' manually in the project directory"),
+            );
         } else {
             debug!("auto_install_deps is disabled, skipping dependency installation");
         }
@@ -273,29 +232,14 @@ impl NewCommand {
         // Setup git hooks if enabled
         if config.post_generation.auto_setup_hooks {
             debug!("auto_setup_hooks is enabled, running hk install");
-            output::step("Setting up git hooks with hk...");
-
-            let hk_status = std::process::Command::new("hk")
-                .arg("install")
-                .current_dir(output_dir)
-                .status();
-
-            match hk_status {
-                Ok(exit_status) if exit_status.success() => {
-                    debug!("Git hooks installed successfully");
-                    output::success("Git hooks installed!");
-                }
-                Ok(exit_status) => {
-                    warn!("hk install exited with status: {}", exit_status);
-                    output::warning(&format!("hk install failed with status: {exit_status}"));
-                    output::info("You can run 'hk install' manually in the project directory");
-                }
-                Err(e) => {
-                    warn!("Could not run hk install: {}", e);
-                    output::warning(&format!("Could not run hk install: {e}"));
-                    output::info("You can run 'hk install' manually in the project directory");
-                }
-            }
+            let _ = utils::run_post_generation_command(
+                "hk",
+                &["install"],
+                output_dir,
+                "Setting up git hooks with hk...",
+                "Git hooks installed!",
+                Some("You can run 'hk install' manually in the project directory"),
+            );
         } else {
             debug!("auto_setup_hooks is disabled, skipping git hooks setup");
         }
