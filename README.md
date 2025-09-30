@@ -69,6 +69,9 @@ Download pre-built binaries for your platform from the [latest release](https://
 # List available templates
 cza list
 
+# Preview a template structure (dry-run)
+cza new noir-vite my-zk-app --dry-run
+
 # Create a new Noir + Vite project
 cza new noir-vite my-zk-app
 

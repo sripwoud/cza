@@ -21,6 +21,10 @@ pub struct NewArgs {
     /// Skip git initialization (overrides config setting)
     #[arg(long)]
     no_git: bool,
+
+    /// Preview template structure without creating files
+    #[arg(long)]
+    dry_run: bool,
 }
 
 pub struct NewCommand;
@@ -48,10 +52,17 @@ impl Execute for NewCommand {
             template_name, args.project_name
         );
 
-        output::step(&format!(
-            "Creating new {} project: {}",
-            template_name, args.project_name
-        ));
+        if args.dry_run {
+            output::step(&format!(
+                "Previewing {} template structure for project: {}",
+                template_name, args.project_name
+            ));
+        } else {
+            output::step(&format!(
+                "Creating new {} project: {}",
+                template_name, args.project_name
+            ));
+        }
 
         // Load embedded template registry
         debug!("Loading embedded template registry");
@@ -72,6 +83,11 @@ impl Execute for NewCommand {
         );
         output::info(&format!("Using template: {}", template_info.name));
         output::info(&format!("Description: {}", template_info.description));
+
+        // If dry-run, show preview and exit
+        if args.dry_run {
+            return self.preview_template(args, &template_name, template_info);
+        }
 
         // Validate project name
         debug!("Validating project name: {}", args.project_name);
@@ -155,6 +171,40 @@ impl Execute for NewCommand {
 }
 
 impl NewCommand {
+    fn preview_template(
+        &self,
+        args: &NewArgs,
+        template_name: &str,
+        template_info: &template::TemplateInfo,
+    ) -> Result<()> {
+        output::header("Dry Run Preview");
+        output::info(&format!("Project name: {}", args.project_name));
+        output::info(&format!("Template: {}", template_name));
+        output::info(&format!("Repository: {}", template_info.repository));
+        output::info(&format!("Subfolder: {}", template_info.subfolder));
+        output::info(&format!(
+            "Frameworks: {}",
+            template_info.frameworks.join(", ")
+        ));
+
+        output::step("What would be created:");
+        output::info(&format!("  📁 ./{}/", args.project_name));
+        output::info("    ├── Cargo.toml (ZK framework dependencies)");
+        output::info("    ├── mise.toml (development tools)");
+        output::info("    ├── package.json (frontend dependencies)");
+        output::info("    ├── src/ (ZK circuit code)");
+        output::info("    └── web/ (frontend application)");
+
+        output::step("Post-generation setup that would run:");
+        output::info("  1. git init (if enabled in config)");
+        output::info("  2. mise install (if auto_install_deps enabled)");
+        output::info("  3. hk install (if auto_setup_hooks enabled)");
+
+        output::success("Preview complete! Remove --dry-run to create the project.");
+
+        Ok(())
+    }
+
     fn validate_project_name(&self, name: &str, config: &Config) -> Result<()> {
         if name.is_empty() {
             return Err(anyhow!("Project name cannot be empty"));
@@ -389,6 +439,7 @@ frameworks = ["test"]
             template: Some("nonexistent-template".to_string()),
             author: None,
             no_git: false,
+            dry_run: false,
         };
 
         let result = cmd.run(&args);
@@ -404,6 +455,7 @@ frameworks = ["test"]
             template: Some("noir-vite".to_string()),
             author: None,
             no_git: false,
+            dry_run: false,
         };
 
         let result = cmd.run(&args);
@@ -418,6 +470,7 @@ frameworks = ["test"]
             template: Some("nonexistent-template".to_string()),
             author: Some("Test Author".to_string()),
             no_git: false,
+            dry_run: false,
         };
 
         // This will fail on template lookup, but we can still test author handling
@@ -479,6 +532,7 @@ frameworks = ["test"]
             template: template.clone(),
             author: author.clone(),
             no_git: false,
+            dry_run: false,
         };
 
         assert_eq!(args.template, template);
@@ -494,12 +548,14 @@ frameworks = ["test"]
             template: None,
             author: None,
             no_git: false,
+            dry_run: false,
         };
 
         assert_eq!(args.template, None);
         assert_eq!(args.project_name, "test-project");
         assert_eq!(args.author, None);
         assert!(!args.no_git);
+        assert!(!args.dry_run);
     }
 
     #[test]
@@ -530,6 +586,7 @@ frameworks = ["test"]
             template: Some("nonexistent-template".to_string()),
             author: Some("CLI Author".to_string()),
             no_git: false,
+            dry_run: false,
         };
 
         // Even though this will fail on template lookup, we can verify the precedence logic exists
@@ -551,6 +608,7 @@ frameworks = ["test"]
             template: None,
             author: None,
             no_git: true,
+            dry_run: false,
         };
 
         let temp_dir = TempDir::new().unwrap();
@@ -575,6 +633,7 @@ frameworks = ["test"]
             template: None,
             author: None,
             no_git: false,
+            dry_run: false,
         };
 
         let temp_dir = TempDir::new().unwrap();
@@ -599,6 +658,7 @@ frameworks = ["test"]
             template: None,
             author: None,
             no_git: false,
+            dry_run: false,
         };
 
         let temp_dir = TempDir::new().unwrap();
@@ -608,5 +668,34 @@ frameworks = ["test"]
         assert!(result.is_ok());
 
         assert!(!temp_path.join(".git").exists());
+    }
+
+    #[test]
+    fn test_dry_run_flag() {
+        let cmd = NewCommand;
+        let args = NewArgs {
+            project_name: "test-project".to_string(),
+            template: Some("noir-vite".to_string()),
+            author: None,
+            no_git: false,
+            dry_run: true,
+        };
+
+        let result = cmd.run(&args);
+        assert!(result.is_ok());
+        assert!(!std::path::Path::new("test-project").exists());
+    }
+
+    #[test]
+    fn test_dry_run_flag_false() {
+        let args = NewArgs {
+            project_name: "test-project".to_string(),
+            template: Some("noir-vite".to_string()),
+            author: None,
+            no_git: false,
+            dry_run: false,
+        };
+
+        assert!(!args.dry_run);
     }
 }
