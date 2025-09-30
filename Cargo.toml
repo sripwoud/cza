@@ -46,6 +46,8 @@ npm-package = "create-zk-app"
 publish-jobs = ["npm"]
 # npm scope (optional, but commonly used for organizations)
 # npm-scope = "@sripwoud"
+# Tag namespace for matching release tags
+tag-namespace = "v"
 
 # Binary aliases - provides both 'cza' and 'create-zk-app' commands
 [workspace.metadata.dist.bin-aliases]
