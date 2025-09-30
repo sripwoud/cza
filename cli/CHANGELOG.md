@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0](https://github.com/sripwoud/cza/compare/v2.1.0...v2.2.0) - 2025-09-30
+
+### Added
+
+- add --no-git flag to skip git initialization ([#32](https://github.com/sripwoud/cza/pull/32))
+
 ## [2.1.0](https://github.com/sripwoud/cza/compare/v2.0.0...v2.1.0) - 2025-09-28
 
 ### Added
