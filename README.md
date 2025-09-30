@@ -37,19 +37,22 @@ cargo install cza
 #### From npm/yarn/pnpm/bun
 
 ```bash
-# npx
 npx create-zk-app
+```
 
-# npm
+```bash
 npm install -g create-zk-app
+```
 
-# yarn
+```bash
 yarn global add create-zk-app
+```
 
-# pnpm
+```bash
 pnpm add -g create-zk-app
+```
 
-# bun
+```bash
 bun add -g create-zk-app
 ```
 
