@@ -66,6 +66,9 @@ cza list --detailed
 # Create a project with a specific template
 cza new noir-vite awesome-zk-project
 
+# Skip git initialization
+cza new noir-vite awesome-zk-project --no-git
+
 # The generated project includes:
 # ├── circuit/          # Noir ZK circuit code
 # ├── web/              # Vite React frontend
