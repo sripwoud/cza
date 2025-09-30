@@ -56,6 +56,10 @@ pnpm add -g create-zk-app
 bun add -g create-zk-app
 ```
 
+#### Pre-built Binaries
+
+Download pre-built binaries for your platform from the [latest release](https://github.com/sripwoud/cza/releases/latest).
+
 ### Create Your First ZK Project
 
 ```bash
