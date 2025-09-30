@@ -42,9 +42,11 @@ targets = [
 ]
 # npm package configuration
 npm-package = "create-zk-app"
-# Custom npm package.json template
-npm-package-json = "./npm-package.json"
 # Enable npm publishing
 publish-jobs = ["npm"]
 # npm scope (optional, but commonly used for organizations)
 # npm-scope = "@sripwoud"
+
+# Binary aliases - provides both 'cza' and 'create-zk-app' commands
+[workspace.metadata.dist.bin-aliases]
+cza = ["create-zk-app"]
