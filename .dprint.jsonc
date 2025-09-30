@@ -1,5 +1,5 @@
 {
-  "excludes": ["cli/CHANGELOG.md", ".github/workflows/release.yml"],
+  "excludes": ["cli/CHANGELOG.md", ".github/workflows/v-release.yml"],
   "exec": {
     "commands": [
       {
