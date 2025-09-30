@@ -48,6 +48,8 @@ publish-jobs = ["npm"]
 # npm-scope = "@sripwoud"
 # Tag namespace for matching release tags
 tag-namespace = "v"
+# Allow CI files to have formatting differences
+allow-dirty = ["ci"]
 
 # Binary aliases - provides both 'cza' and 'create-zk-app' commands
 [workspace.metadata.dist.bin-aliases]
