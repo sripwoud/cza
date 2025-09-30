@@ -34,12 +34,23 @@ A CLI tool for scaffolding zero-knowledge application projects with modern devel
 cargo install cza
 ```
 
-#### From npm
+#### From npm/yarn/pnpm/bun
 
 ```bash
+# npx
 npx create-zk-app
-# or
+
+# npm
 npm install -g create-zk-app
+
+# yarn
+yarn global add create-zk-app
+
+# pnpm
+pnpm add -g create-zk-app
+
+# bun
+bun add -g create-zk-app
 ```
 
 ### Create Your First ZK Project
