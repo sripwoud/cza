@@ -69,6 +69,9 @@ Download pre-built binaries for your platform from the [latest release](https://
 # List available templates
 cza list
 
+# List templates as JSON (for scripting)
+cza list --json
+
 # Preview a template structure (dry-run)
 cza new noir-vite my-zk-app --dry-run
 

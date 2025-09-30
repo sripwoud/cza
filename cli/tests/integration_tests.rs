@@ -39,6 +39,18 @@ fn test_list_command() {
 }
 
 #[test]
+fn test_list_json_command() {
+    let mut cmd = Command::cargo_bin("cza").unwrap();
+    cmd.args(["list", "--json"])
+        .assert()
+        .success()
+        .stdout(predicate::str::starts_with("["))
+        .stdout(predicate::str::contains("\"key\""))
+        .stdout(predicate::str::contains("\"name\""))
+        .stdout(predicate::str::contains("\"noir-vite\""));
+}
+
+#[test]
 fn test_invalid_template() {
     let temp_dir = TempDir::new().unwrap();
     let mut cmd = Command::cargo_bin("cza").unwrap();
