@@ -2,6 +2,8 @@
 release_commits = "^(feat|fix|perf|refactor)[:(]"
 # Disable GitHub release creation - let cargo-dist handle it
 git_release_enable = false
+# Disable crates.io publishing - let cargo-dist handle it
+publish = false
 
 [[package]]
 name = "cza"

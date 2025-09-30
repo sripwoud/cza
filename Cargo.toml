@@ -43,8 +43,8 @@ targets = [
 ]
 # npm package configuration
 npm-package = "create-zk-app"
-# Enable npm publishing
-publish-jobs = ["npm"]
+# Enable npm and crates.io publishing
+publish-jobs = ["npm", "cargo"]
 # npm scope (optional, but commonly used for organizations)
 # npm-scope = "@sripwoud"
 # Tag namespace for matching release tags
