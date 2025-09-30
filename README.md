@@ -28,8 +28,18 @@ A CLI tool for scaffolding zero-knowledge application projects with modern devel
 
 ### Installation
 
+#### From Cargo
+
 ```bash
 cargo install cza
+```
+
+#### From npm
+
+```bash
+npx create-zk-app
+# or
+npm install -g create-zk-app
 ```
 
 ### Create Your First ZK Project
