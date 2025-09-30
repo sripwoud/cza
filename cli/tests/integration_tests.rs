@@ -129,3 +129,12 @@ fn test_update_command_help() {
             "Update the CLI tool to the latest version",
         ));
 }
+
+#[test]
+fn test_new_command_no_git_flag() {
+    let mut cmd = Command::cargo_bin("cza").unwrap();
+    cmd.args(["new", "--help"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("--no-git"));
+}

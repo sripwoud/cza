@@ -17,6 +17,10 @@ pub struct NewArgs {
     /// Author name (optional, falls back to config then git config)
     #[arg(long)]
     author: Option<String>,
+
+    /// Skip git initialization (overrides config setting)
+    #[arg(long)]
+    no_git: bool,
 }
 
 pub struct NewCommand;
@@ -136,8 +140,8 @@ impl Execute for NewCommand {
                 output::success("Project created successfully!");
                 output::directory(&output_dir.display().to_string());
 
-                // Post-generation setup based on config
-                self.run_post_generation_setup(&output_dir, &config)?;
+                // Post-generation setup based on config and args
+                self.run_post_generation_setup(&output_dir, &config, args)?;
 
                 output::next_steps(&[&format!("cd {}", args.project_name), "mise run dev"]);
             }
@@ -196,11 +200,13 @@ impl NewCommand {
         &self,
         output_dir: &std::path::Path,
         config: &Config,
+        args: &NewArgs,
     ) -> Result<()> {
         debug!("Running post-generation setup");
 
-        // Initialize git if enabled
-        if config.user.git_init {
+        // Initialize git if enabled (CLI flag overrides config)
+        let should_init_git = !args.no_git && config.user.git_init;
+        if should_init_git {
             debug!("git_init is enabled, initializing git repository");
             let _ = utils::run_post_generation_command(
                 "git",
@@ -210,8 +216,10 @@ impl NewCommand {
                 "Git repository initialized!",
                 None,
             );
+        } else if args.no_git {
+            debug!("--no-git flag provided, skipping git initialization");
         } else {
-            debug!("git_init is disabled, skipping git initialization");
+            debug!("git_init is disabled in config, skipping git initialization");
         }
 
         // Install dependencies if enabled
@@ -229,9 +237,9 @@ impl NewCommand {
             debug!("auto_install_deps is disabled, skipping dependency installation");
         }
 
-        // Setup git hooks if enabled
-        if config.post_generation.auto_setup_hooks {
-            debug!("auto_setup_hooks is enabled, running hk install");
+        // Setup git hooks if enabled (requires git to be initialized)
+        if should_init_git && config.post_generation.auto_setup_hooks {
+            debug!("auto_setup_hooks is enabled and git is initialized, running hk install");
             let _ = utils::run_post_generation_command(
                 "hk",
                 &["install"],
@@ -241,7 +249,11 @@ impl NewCommand {
                 Some("You can run 'hk install' manually in the project directory"),
             );
         } else {
-            debug!("auto_setup_hooks is disabled, skipping git hooks setup");
+            if !should_init_git {
+                debug!("git not initialized, skipping git hooks setup");
+            } else {
+                debug!("auto_setup_hooks is disabled, skipping git hooks setup");
+            }
         }
 
         // Open in editor if configured
@@ -378,6 +390,7 @@ frameworks = ["test"]
             project_name: "test-project".to_string(),
             template: Some("nonexistent-template".to_string()),
             author: None,
+            no_git: false,
         };
 
         let result = cmd.run(&args);
@@ -392,6 +405,7 @@ frameworks = ["test"]
             project_name: "invalid name".to_string(),
             template: Some("noir-vite".to_string()),
             author: None,
+            no_git: false,
         };
 
         let result = cmd.run(&args);
@@ -405,6 +419,7 @@ frameworks = ["test"]
             project_name: "test-project".to_string(),
             template: Some("nonexistent-template".to_string()),
             author: Some("Test Author".to_string()),
+            no_git: false,
         };
 
         // This will fail on template lookup, but we can still test author handling
@@ -465,6 +480,7 @@ frameworks = ["test"]
             project_name: name.clone(),
             template: template.clone(),
             author: author.clone(),
+            no_git: false,
         };
 
         assert_eq!(args.template, template);
@@ -479,11 +495,13 @@ frameworks = ["test"]
             project_name: "test-project".to_string(),
             template: None,
             author: None,
+            no_git: false,
         };
 
         assert_eq!(args.template, None);
         assert_eq!(args.project_name, "test-project");
         assert_eq!(args.author, None);
+        assert!(!args.no_git);
     }
 
     #[test]
@@ -513,11 +531,84 @@ frameworks = ["test"]
             project_name: "test-project".to_string(),
             template: Some("nonexistent-template".to_string()),
             author: Some("CLI Author".to_string()),
+            no_git: false,
         };
 
         // Even though this will fail on template lookup, we can verify the precedence logic exists
         let result = cmd.run(&args);
         assert!(result.is_err());
         assert!(result.unwrap_err().to_string().contains("not found"));
+    }
+
+    #[test]
+    fn test_no_git_flag_overrides_config() {
+        use tempfile::TempDir;
+
+        let cmd = NewCommand;
+        let mut config = Config::default();
+        config.user.git_init = true;
+
+        let args = NewArgs {
+            project_name: "test-project".to_string(),
+            template: None,
+            author: None,
+            no_git: true,
+        };
+
+        let temp_dir = TempDir::new().unwrap();
+        let temp_path = temp_dir.path();
+
+        let result = cmd.run_post_generation_setup(temp_path, &config, &args);
+        assert!(result.is_ok());
+
+        assert!(!temp_path.join(".git").exists());
+    }
+
+    #[test]
+    fn test_no_git_flag_false_respects_config() {
+        use tempfile::TempDir;
+
+        let cmd = NewCommand;
+        let mut config = Config::default();
+        config.user.git_init = true;
+
+        let args = NewArgs {
+            project_name: "test-project".to_string(),
+            template: None,
+            author: None,
+            no_git: false,
+        };
+
+        let temp_dir = TempDir::new().unwrap();
+        let temp_path = temp_dir.path();
+
+        let result = cmd.run_post_generation_setup(temp_path, &config, &args);
+        assert!(result.is_ok());
+
+        assert!(temp_path.join(".git").exists());
+    }
+
+    #[test]
+    fn test_no_git_config_disabled() {
+        use tempfile::TempDir;
+
+        let cmd = NewCommand;
+        let mut config = Config::default();
+        config.user.git_init = false;
+
+        let args = NewArgs {
+            project_name: "test-project".to_string(),
+            template: None,
+            author: None,
+            no_git: false,
+        };
+
+        let temp_dir = TempDir::new().unwrap();
+        let temp_path = temp_dir.path();
+
+        let result = cmd.run_post_generation_setup(temp_path, &config, &args);
+        assert!(result.is_ok());
+
+        assert!(!temp_path.join(".git").exists());
     }
 }
