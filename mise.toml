@@ -26,6 +26,7 @@ description = "Run the tests"
 run = "cargo llvm-cov nextest --all-features --all-targets --workspace"
 
 [tools]
+"cargo:cargo-dist" = "latest"
 "cargo:cargo-llvm-cov" = "latest"
 "cargo:cargo-nextest" = "latest"
 "cargo:convco" = "latest"
