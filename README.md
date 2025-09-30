@@ -3,6 +3,9 @@
   <a href="https://crates.io/crates/cza">
     <img alt="Crates.io Version" src="https://img.shields.io/crates/v/cza">
   </a>
+  <a href="https://www.npmjs.com/package/create-zk-app">
+    <img alt="NPM Version" src="https://img.shields.io/npm/v/create-zk-app">
+  </a>
   <br>
   <a href="https://github.com/sripwoud/cza/actions?query=workflow%3Amain"><img alt="GitHub Workflow main" src="https://img.shields.io/github/actions/workflow/status/sripwoud/cza/main.yml?branch=main&label=check&logo=github">
   </a>
