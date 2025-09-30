@@ -66,6 +66,9 @@ Download pre-built binaries for your platform from the [latest release](https://
 ### Create Your First ZK Project
 
 ```bash
+# Check version
+cza --version
+
 # List available templates
 cza list
 
