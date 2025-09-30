@@ -28,9 +28,37 @@ A CLI tool for scaffolding zero-knowledge application projects with modern devel
 
 ### Installation
 
+#### From Cargo
+
 ```bash
 cargo install cza
 ```
+
+#### From npm/yarn/pnpm/bun
+
+```bash
+npx create-zk-app
+```
+
+```bash
+npm install -g create-zk-app
+```
+
+```bash
+yarn global add create-zk-app
+```
+
+```bash
+pnpm add -g create-zk-app
+```
+
+```bash
+bun add -g create-zk-app
+```
+
+#### Pre-built Binaries
+
+Download pre-built binaries for your platform from the [latest release](https://github.com/sripwoud/cza/releases/latest).
 
 ### Create Your First ZK Project
 
@@ -56,26 +84,6 @@ Templates are hosted at [cza-templates](https://github.com/sripwoud/cza-template
 | `noir-vite`  | Noir Program running in the browser (wasm web worker) with modern frontend stack  | [Noir](https://noir-lang.org/)      | [Vite](https://vitejs.dev/) + [React](https://react.dev/) + [TanStack](https://tanstack.com/) |
 
 More templates coming soon: Cairo, Risc0, o1js, and more!
-
-## Example Usage
-
-```bash
-# List all available templates with details
-cza list --detailed
-
-# Create a project with a specific template
-cza new noir-vite awesome-zk-project
-
-# Skip git initialization
-cza new noir-vite awesome-zk-project --no-git
-
-# The generated project includes:
-# ├── circuit/          # Noir ZK circuit code
-# ├── web/              # Vite React frontend
-# ├── mise.toml         # Development environment
-# ├── hk.pkl           # Git hooks configuration
-# └── .github/         # CI/CD workflows
-```
 
 ## How It Works
 
