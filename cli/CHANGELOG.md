@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.0](https://github.com/sripwoud/cza/compare/v2.2.1...v2.3.0) - 2025-09-30
+
+### Added
+
+- add --dry-run flag to new command ([#39](https://github.com/sripwoud/cza/pull/39))
+- unified release workflow with cargo-dist and release-plz ([#36](https://github.com/sripwoud/cza/pull/36))
+
+### Other
+
+- add comprehensive rustdoc documentation ([#37](https://github.com/sripwoud/cza/pull/37))
+- add npm shield
+
 ## [2.2.1](https://github.com/sripwoud/cza/compare/v2.2.0...v2.2.1) - 2025-09-30
 
 ### Other
