@@ -248,12 +248,10 @@ impl NewCommand {
                 "Git hooks installed!",
                 Some("You can run 'hk install' manually in the project directory"),
             );
+        } else if !should_init_git {
+            debug!("git not initialized, skipping git hooks setup");
         } else {
-            if !should_init_git {
-                debug!("git not initialized, skipping git hooks setup");
-            } else {
-                debug!("auto_setup_hooks is disabled, skipping git hooks setup");
-            }
+            debug!("auto_setup_hooks is disabled, skipping git hooks setup");
         }
 
         // Open in editor if configured
