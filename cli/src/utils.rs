@@ -1,3 +1,13 @@
+//! Utility functions for command execution
+//!
+//! This module provides helper functions for:
+//!
+//! - Running system commands with standardized logging and error handling
+//! - Retrieving git configuration values
+//! - Running post-generation commands with user-friendly output
+//!
+//! These utilities are used throughout the CLI for consistent command execution and output formatting.
+
 use crate::output;
 use log::debug;
 use std::path::Path;

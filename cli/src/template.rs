@@ -1,3 +1,33 @@
+//! Template registry and validation
+//!
+//! This module manages the embedded template registry loaded from `templates.toml`.
+//! It provides functionality to:
+//!
+//! - Load available templates from the embedded registry
+//! - Validate template configuration
+//! - Check system prerequisites (git availability)
+//!
+//! ## Template Structure
+//!
+//! Each template in the registry contains:
+//! - Name and description
+//! - Git repository URL
+//! - Subfolder path within the repository
+//! - Associated ZK frameworks
+//!
+//! ## Example
+//!
+//! ```no_run
+//! use cza::template::{load_template_registry, validate_template};
+//!
+//! let registry = load_template_registry()?;
+//! if let Some(template) = registry.templates.get("noir-vite") {
+//!     validate_template(template)?;
+//!     println!("Template {} is valid", template.name);
+//! }
+//! # Ok::<(), anyhow::Error>(())
+//! ```
+
 use anyhow::{anyhow, Result};
 use log::debug;
 use serde::Deserialize;
@@ -7,16 +37,22 @@ use std::process::Command;
 /// Template registry containing all available templates
 #[derive(Deserialize)]
 pub struct TemplateRegistry {
+    /// Map of template keys to template information
     pub templates: HashMap<String, TemplateInfo>,
 }
 
 /// Information about a specific template
 #[derive(Deserialize)]
 pub struct TemplateInfo {
+    /// Display name of the template
     pub name: String,
+    /// Description of what the template provides
     pub description: String,
+    /// Git repository URL
     pub repository: String,
+    /// Subfolder path within the repository
     pub subfolder: String,
+    /// ZK frameworks included in the template
     pub frameworks: Vec<String>,
 }
 
