@@ -6,6 +6,7 @@
 //! - Load available templates from the embedded registry
 //! - Validate template configuration
 //! - Check system prerequisites (git availability)
+//! - Support template pinning to specific git revisions
 //!
 //! ## Template Structure
 //!
@@ -14,6 +15,14 @@
 //! - Git repository URL
 //! - Subfolder path within the repository
 //! - Associated ZK frameworks
+//! - Optional git revision (commit SHA, tag, or branch) for pinning
+//!
+//! ## Template Pinning
+//!
+//! Templates can be pinned to specific git revisions for reproducibility:
+//! - Specify `revision` in `templates.toml` for global pinning
+//! - Use `--revision` CLI flag for per-invocation pinning
+//! - CLI flag takes precedence over registry setting
 //!
 //! ## Example
 //!
@@ -24,6 +33,9 @@
 //! if let Some(template) = registry.templates.get("noir-vite") {
 //!     validate_template(template)?;
 //!     println!("Template {} is valid", template.name);
+//!     if let Some(ref rev) = template.revision {
+//!         println!("Pinned to revision: {}", rev);
+//!     }
 //! }
 //! # Ok::<(), anyhow::Error>(())
 //! ```
@@ -54,6 +66,9 @@ pub struct TemplateInfo {
     pub subfolder: String,
     /// ZK frameworks included in the template
     pub frameworks: Vec<String>,
+    /// Optional git revision (commit SHA, tag, or branch) to pin the template
+    #[serde(default)]
+    pub revision: Option<String>,
 }
 
 /// Load the embedded template registry from templates.toml
@@ -151,6 +166,7 @@ mod tests {
             repository: "https://github.com/test/test".to_string(),
             subfolder: "test-template".to_string(),
             frameworks: vec!["test".to_string()],
+            revision: None,
         };
 
         assert!(validate_template(&valid_template).is_ok());
@@ -164,6 +180,7 @@ mod tests {
             repository: "".to_string(),
             subfolder: "test-template".to_string(),
             frameworks: vec!["test".to_string()],
+            revision: None,
         };
 
         let result = validate_template(&invalid_template);
@@ -182,6 +199,7 @@ mod tests {
             repository: "https://github.com/test/test".to_string(),
             subfolder: "".to_string(),
             frameworks: vec!["test".to_string()],
+            revision: None,
         };
 
         let result = validate_template(&invalid_template);
@@ -200,6 +218,7 @@ mod tests {
             repository: "invalid-url".to_string(),
             subfolder: "test-template".to_string(),
             frameworks: vec!["test".to_string()],
+            revision: None,
         };
 
         let result = validate_template(&invalid_template);
@@ -218,6 +237,7 @@ mod tests {
             repository: "https://github.com/user/repo".to_string(),
             subfolder: "template".to_string(),
             frameworks: vec!["test".to_string()],
+            revision: None,
         };
 
         assert!(validate_template(&github_template).is_ok());
@@ -231,6 +251,7 @@ mod tests {
             repository: "git@github.com:user/repo.git".to_string(),
             subfolder: "template".to_string(),
             frameworks: vec!["test".to_string()],
+            revision: None,
         };
 
         assert!(validate_template(&ssh_template).is_ok());
@@ -244,5 +265,42 @@ mod tests {
         // We don't assert the result since git may or may not be available
         // Just ensure the function doesn't panic
         println!("Git available: {}", git_available);
+    }
+
+    #[test]
+    fn test_template_info_with_revision() {
+        let template_with_revision = TemplateInfo {
+            name: "Pinned Template".to_string(),
+            description: "A template pinned to a revision".to_string(),
+            repository: "https://github.com/test/test".to_string(),
+            subfolder: "template".to_string(),
+            frameworks: vec!["test".to_string()],
+            revision: Some("abc123def".to_string()),
+        };
+
+        assert_eq!(
+            template_with_revision.revision,
+            Some("abc123def".to_string())
+        );
+        assert!(validate_template(&template_with_revision).is_ok());
+    }
+
+    #[test]
+    fn test_template_registry_parsing_with_revision() {
+        let toml_content = r#"
+[templates.pinned-template]
+name = "Pinned Template"
+description = "A template with revision"
+repository = "https://github.com/test/test"
+subfolder = "test-template"
+frameworks = ["test"]
+revision = "abc123def"
+"#;
+
+        let registry: TemplateRegistry = toml::from_str(toml_content).unwrap();
+        assert!(registry.templates.contains_key("pinned-template"));
+
+        let template = &registry.templates["pinned-template"];
+        assert_eq!(template.revision, Some("abc123def".to_string()));
     }
 }

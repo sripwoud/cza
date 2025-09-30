@@ -78,6 +78,9 @@ cza new noir-vite my-zk-app --dry-run
 # Create a new Noir + Vite project
 cza new noir-vite my-zk-app
 
+# Pin template to specific git revision (commit SHA, tag, or branch)
+cza new noir-vite my-zk-app --revision abc123def
+
 # Navigate and start developing
 cd my-zk-app
 mise run dev
