@@ -30,7 +30,7 @@
 
 use anyhow::{anyhow, Result};
 use log::debug;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::process::Command;
 
@@ -42,7 +42,7 @@ pub struct TemplateRegistry {
 }
 
 /// Information about a specific template
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 pub struct TemplateInfo {
     /// Display name of the template
     pub name: String,

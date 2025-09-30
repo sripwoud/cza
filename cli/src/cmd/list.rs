@@ -3,12 +3,27 @@ use crate::{output, template};
 use anyhow::Result;
 use clap::Args;
 use log::{debug, warn};
+use serde::Serialize;
 
 #[derive(Args, Debug)]
 pub struct ListArgs {
     /// Show detailed information about templates
     #[arg(long)]
     detailed: bool,
+
+    /// Output templates as JSON
+    #[arg(long)]
+    json: bool,
+}
+
+#[derive(Serialize)]
+struct JsonTemplate {
+    key: String,
+    name: String,
+    description: String,
+    repository: String,
+    subfolder: String,
+    frameworks: Vec<String>,
 }
 
 pub struct ListCommand;
@@ -17,7 +32,10 @@ impl Execute for ListCommand {
     type Args = ListArgs;
 
     fn run(&self, args: &Self::Args) -> Result<()> {
-        debug!("Starting list command with detailed: {}", args.detailed);
+        debug!(
+            "Starting list command with detailed: {}, json: {}",
+            args.detailed, args.json
+        );
 
         // Load embedded template registry
         debug!("Loading embedded template registry");
@@ -26,15 +44,39 @@ impl Execute for ListCommand {
 
         if registry.templates.is_empty() {
             warn!("No templates available in registry");
-            output::warning("No templates available.");
+            if args.json {
+                println!("[]");
+            } else {
+                output::warning("No templates available.");
+            }
             return Ok(());
         }
-
-        output::header("Available templates");
 
         // Sort templates by name for consistent output
         let mut templates: Vec<_> = registry.templates.iter().collect();
         templates.sort_by_key(|(key, _)| *key);
+
+        // Handle JSON output
+        if args.json {
+            let json_templates: Vec<JsonTemplate> = templates
+                .iter()
+                .map(|(key, info)| JsonTemplate {
+                    key: (*key).clone(),
+                    name: info.name.clone(),
+                    description: info.description.clone(),
+                    repository: info.repository.clone(),
+                    subfolder: info.subfolder.clone(),
+                    frameworks: info.frameworks.clone(),
+                })
+                .collect();
+
+            let json_output = serde_json::to_string_pretty(&json_templates)?;
+            println!("{}", json_output);
+            return Ok(());
+        }
+
+        // Regular formatted output
+        output::header("Available templates");
 
         for (template_key, template_info) in templates {
             if args.detailed {
@@ -80,7 +122,10 @@ mod tests {
     #[test]
     fn test_list_command_execute() {
         let cmd = ListCommand;
-        let args = ListArgs { detailed: false };
+        let args = ListArgs {
+            detailed: false,
+            json: false,
+        };
         // Should not panic and should return Ok
         assert!(cmd.run(&args).is_ok());
     }
@@ -88,9 +133,57 @@ mod tests {
     #[test]
     fn test_list_detailed_command_execute() {
         let cmd = ListCommand;
-        let args = ListArgs { detailed: true };
+        let args = ListArgs {
+            detailed: true,
+            json: false,
+        };
         // Should not panic and should return Ok
         assert!(cmd.run(&args).is_ok());
+    }
+
+    #[test]
+    fn test_list_json_command_execute() {
+        let cmd = ListCommand;
+        let args = ListArgs {
+            detailed: false,
+            json: true,
+        };
+        // Should not panic and should return Ok
+        assert!(cmd.run(&args).is_ok());
+    }
+
+    #[test]
+    fn test_json_output_format() {
+        // Capture stdout
+        let cmd = ListCommand;
+        let args = ListArgs {
+            detailed: false,
+            json: true,
+        };
+
+        // Just verify command executes successfully
+        // Full output validation would require capturing stdout
+        assert!(cmd.run(&args).is_ok());
+
+        // Verify JSON template structure can be serialized
+        let test_template = JsonTemplate {
+            key: "test-template".to_string(),
+            name: "Test Template".to_string(),
+            description: "A test template".to_string(),
+            repository: "https://github.com/test/repo".to_string(),
+            subfolder: "test".to_string(),
+            frameworks: vec!["noir".to_string(), "vite".to_string()],
+        };
+
+        // Should serialize without error
+        let json_str = serde_json::to_string(&test_template).unwrap();
+        assert!(json_str.contains("test-template"));
+        assert!(json_str.contains("Test Template"));
+
+        // Should be valid JSON
+        let parsed: serde_json::Value = serde_json::from_str(&json_str).unwrap();
+        assert_eq!(parsed["key"], "test-template");
+        assert_eq!(parsed["frameworks"][0], "noir");
     }
 
     #[test]
