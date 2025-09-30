@@ -85,26 +85,6 @@ Templates are hosted at [cza-templates](https://github.com/sripwoud/cza-template
 
 More templates coming soon: Cairo, Risc0, o1js, and more!
 
-## Example Usage
-
-```bash
-# List all available templates with details
-cza list --detailed
-
-# Create a project with a specific template
-cza new noir-vite awesome-zk-project
-
-# Skip git initialization
-cza new noir-vite awesome-zk-project --no-git
-
-# The generated project includes:
-# ├── circuit/          # Noir ZK circuit code
-# ├── web/              # Vite React frontend
-# ├── mise.toml         # Development environment
-# ├── hk.pkl           # Git hooks configuration
-# └── .github/         # CI/CD workflows
-```
-
 ## How It Works
 
 **cza** is built in Rust and uses:
