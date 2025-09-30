@@ -24,6 +24,8 @@ struct JsonTemplate {
     repository: String,
     subfolder: String,
     frameworks: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    revision: Option<String>,
 }
 
 pub struct ListCommand;
@@ -67,6 +69,7 @@ impl Execute for ListCommand {
                     repository: info.repository.clone(),
                     subfolder: info.subfolder.clone(),
                     frameworks: info.frameworks.clone(),
+                    revision: info.revision.clone(),
                 })
                 .collect();
 
@@ -96,8 +99,16 @@ impl Execute for ListCommand {
                     &template_info.frameworks,
                     &template_url,
                 );
+                // Show pinned revision if present
+                if let Some(ref revision) = template_info.revision {
+                    output::info(&format!("    📌 Pinned to: {}", revision));
+                }
             } else {
                 output::template_item(template_key, &template_info.description);
+                // Show pinned indicator in summary view
+                if template_info.revision.is_some() {
+                    output::info("      📌 (pinned)");
+                }
             }
         }
 
@@ -173,6 +184,7 @@ mod tests {
             repository: "https://github.com/test/repo".to_string(),
             subfolder: "test".to_string(),
             frameworks: vec!["noir".to_string(), "vite".to_string()],
+            revision: None,
         };
 
         // Should serialize without error
@@ -208,6 +220,7 @@ mod tests {
             repository: "https://github.com/test/test".to_string(),
             subfolder: "test-template".to_string(),
             frameworks: vec!["test".to_string(), "framework".to_string()],
+            revision: None,
         };
 
         // Test that template has expected properties

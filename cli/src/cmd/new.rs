@@ -25,6 +25,10 @@ pub struct NewArgs {
     /// Preview template structure without creating files
     #[arg(long)]
     dry_run: bool,
+
+    /// Pin template to specific git revision (commit SHA, tag, or branch)
+    #[arg(long)]
+    revision: Option<String>,
 }
 
 pub struct NewCommand;
@@ -118,10 +122,24 @@ impl Execute for NewCommand {
             debug!("Using email from config: {}", email_addr);
         }
 
+        // Resolve revision: CLI arg takes precedence over registry value
+        let revision = args
+            .revision
+            .clone()
+            .or_else(|| template_info.revision.clone());
+
+        if let Some(ref rev) = revision {
+            debug!("Using pinned revision: {}", rev);
+            output::info(&format!("📌 Pinned to revision: {}", rev));
+        } else {
+            debug!("Using latest version (no revision pinned)");
+        }
+
         // Create template path with git repository and subfolder
         let template_path = TemplatePath {
             git: Some(template_info.repository.clone()),
             subfolder: Some(template_info.subfolder.clone()),
+            revision,
             ..Default::default()
         };
 
@@ -182,6 +200,15 @@ impl NewCommand {
         output::info(&format!("Template: {}", template_name));
         output::info(&format!("Repository: {}", template_info.repository));
         output::info(&format!("Subfolder: {}", template_info.subfolder));
+
+        // Show revision if pinned (CLI arg takes precedence)
+        let revision = args.revision.as_ref().or(template_info.revision.as_ref());
+        if let Some(rev) = revision {
+            output::info(&format!("📌 Pinned to: {}", rev));
+        } else {
+            output::info("📌 Pinned to: latest");
+        }
+
         output::info(&format!(
             "Frameworks: {}",
             template_info.frameworks.join(", ")
@@ -378,6 +405,7 @@ frameworks = ["test"]
         assert_eq!(template.repository, "https://github.com/test/test");
         assert_eq!(template.subfolder, "test-template");
         assert_eq!(template.frameworks, vec!["test"]);
+        assert_eq!(template.revision, None);
     }
 
     #[test]
@@ -440,6 +468,7 @@ frameworks = ["test"]
             author: None,
             no_git: false,
             dry_run: false,
+            revision: None,
         };
 
         let result = cmd.run(&args);
@@ -456,6 +485,7 @@ frameworks = ["test"]
             author: None,
             no_git: false,
             dry_run: false,
+            revision: None,
         };
 
         let result = cmd.run(&args);
@@ -471,6 +501,7 @@ frameworks = ["test"]
             author: Some("Test Author".to_string()),
             no_git: false,
             dry_run: false,
+            revision: None,
         };
 
         // This will fail on template lookup, but we can still test author handling
@@ -533,6 +564,7 @@ frameworks = ["test"]
             author: author.clone(),
             no_git: false,
             dry_run: false,
+            revision: None,
         };
 
         assert_eq!(args.template, template);
@@ -549,6 +581,7 @@ frameworks = ["test"]
             author: None,
             no_git: false,
             dry_run: false,
+            revision: None,
         };
 
         assert_eq!(args.template, None);
@@ -556,6 +589,7 @@ frameworks = ["test"]
         assert_eq!(args.author, None);
         assert!(!args.no_git);
         assert!(!args.dry_run);
+        assert_eq!(args.revision, None);
     }
 
     #[test]
@@ -587,6 +621,7 @@ frameworks = ["test"]
             author: Some("CLI Author".to_string()),
             no_git: false,
             dry_run: false,
+            revision: None,
         };
 
         // Even though this will fail on template lookup, we can verify the precedence logic exists
@@ -609,6 +644,7 @@ frameworks = ["test"]
             author: None,
             no_git: true,
             dry_run: false,
+            revision: None,
         };
 
         let temp_dir = TempDir::new().unwrap();
@@ -634,6 +670,7 @@ frameworks = ["test"]
             author: None,
             no_git: false,
             dry_run: false,
+            revision: None,
         };
 
         let temp_dir = TempDir::new().unwrap();
@@ -659,6 +696,7 @@ frameworks = ["test"]
             author: None,
             no_git: false,
             dry_run: false,
+            revision: None,
         };
 
         let temp_dir = TempDir::new().unwrap();
@@ -679,6 +717,7 @@ frameworks = ["test"]
             author: None,
             no_git: false,
             dry_run: true,
+            revision: None,
         };
 
         let result = cmd.run(&args);
@@ -694,8 +733,37 @@ frameworks = ["test"]
             author: None,
             no_git: false,
             dry_run: false,
+            revision: None,
         };
 
         assert!(!args.dry_run);
+    }
+
+    #[test]
+    fn test_revision_flag() {
+        let args = NewArgs {
+            project_name: "test-project".to_string(),
+            template: Some("noir-vite".to_string()),
+            author: None,
+            no_git: false,
+            dry_run: false,
+            revision: Some("abc123def".to_string()),
+        };
+
+        assert_eq!(args.revision, Some("abc123def".to_string()));
+    }
+
+    #[test]
+    fn test_revision_flag_none() {
+        let args = NewArgs {
+            project_name: "test-project".to_string(),
+            template: Some("noir-vite".to_string()),
+            author: None,
+            no_git: false,
+            dry_run: false,
+            revision: None,
+        };
+
+        assert_eq!(args.revision, None);
     }
 }
