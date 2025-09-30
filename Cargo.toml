@@ -6,7 +6,7 @@ resolver = "2"
 [workspace.dependencies]
 anyhow = "1.0"
 assert_cmd = "2.0"
-cargo-generate = "0.21"
+cargo-generate = { version = "0.21", features = ["vendored-openssl"] }
 clap = { version = "4.5.29", features = ["derive"] }
 console = "0.15"
 dirs = "6.0"
