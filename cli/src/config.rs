@@ -1,3 +1,26 @@
+//! Configuration management for cza
+//!
+//! This module handles loading, saving, and managing user configuration stored in `~/.config/cza/config.toml`.
+//!
+//! ## Configuration Structure
+//!
+//! The configuration is divided into three main sections:
+//!
+//! - [`UserConfig`] - User preferences (author, email, default template, git initialization)
+//! - [`DevelopmentConfig`] - Development settings (verbose logging, color output, overwrite confirmation)
+//! - [`PostGenerationConfig`] - Post-generation behavior (auto-install deps, auto-setup hooks, open editor)
+//!
+//! ## Example
+//!
+//! ```no_run
+//! use cza::config::Config;
+//!
+//! let mut config = Config::load()?;
+//! config.set("user.author", "John Doe")?;
+//! config.save()?;
+//! # Ok::<(), anyhow::Error>(())
+//! ```
+
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 use std::fs;

@@ -1,3 +1,14 @@
+//! Command implementations for the CLI
+//!
+//! This module contains all command implementations that can be executed via the CLI:
+//!
+//! - [`new`] - Create new ZK application projects from templates
+//! - [`list`] - List available templates and frameworks
+//! - [`config`] - Configure global CLI settings
+//! - [`update`] - Self-update the CLI tool
+//!
+//! All commands implement the [`Execute`] trait for consistent execution and error handling.
+
 use crate::output;
 use anyhow::Result;
 
@@ -6,11 +17,15 @@ pub mod list;
 pub mod new;
 pub mod update;
 
+/// Trait for command execution with standardized error handling
 pub trait Execute {
+    /// Associated type for command arguments
     type Args;
 
+    /// Execute the command with the given arguments
     fn run(&self, args: &Self::Args) -> Result<()>;
 
+    /// Execute the command and handle errors consistently
     fn execute(&self, args: &Self::Args) {
         if let Err(e) = self.run(args) {
             output::format_error(&e);
