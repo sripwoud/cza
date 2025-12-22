@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.1](https://github.com/sripwoud/cza/compare/v2.4.0...v2.4.1) - 2025-12-20
+
+### Fixed
+
+- migrate tests from cargo_bin to escargot ([#49](https://github.com/sripwoud/cza/pull/49))
+
 ## [2.4.0](https://github.com/sripwoud/cza/compare/v2.3.0...v2.4.0) - 2025-09-30
 
 ### Added
